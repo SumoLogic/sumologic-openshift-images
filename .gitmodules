@@ -1,3 +1,6 @@
 [submodule "kube-state-metrics/v1.9.7/source"]
 	path = kube-state-metrics/v1.9.7/source
 	url = https://github.com/kubernetes/kube-state-metrics
+[submodule "prometheus-operator/v0.43.2/source"]
+	path = prometheus-operator/v0.43.2/source
+	url = https://github.com/prometheus-operator/prometheus-operator
