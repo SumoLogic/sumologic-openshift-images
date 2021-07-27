@@ -10,7 +10,8 @@ LABEL name="Prometheus-operator" \
       version="0.43.2" \
       release="1" \
       summary="UBI based prometheus-operator" \
-      description="The Prometheus Operator provides Kubernetes native deployment and management of Prometheus and related monitoring components."
+      description="The Prometheus Operator provides Kubernetes native deployment and management of Prometheus and related monitoring components." \
+      maintainer="collection@sumologic.com"
 
 COPY --from=builder \
     /bin/operator \

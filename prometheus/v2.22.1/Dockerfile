@@ -6,14 +6,14 @@ FROM quay.io/prometheus/prometheus:v2.22.1 as builder
 ARG ARCH="amd64"
 ARG OS="linux"
 FROM registry.access.redhat.com/ubi8/ubi:8.4
-LABEL maintainer="The Prometheus Authors <prometheus-developers@googlegroups.com>"
 
 LABEL name="Prometheus" \
       vendor="SumoLogic" \
       version="2.22.1" \
       release="1" \
       summary="UBI based prometheus" \
-      description="Prometheus, a Cloud Native Computing Foundation project, is a systems and service monitoring system."
+      description="Prometheus, a Cloud Native Computing Foundation project, is a systems and service monitoring system." \
+      maintainer="collection@sumologic.com"
 
 ARG ARCH="amd64"
 ARG OS="linux"
