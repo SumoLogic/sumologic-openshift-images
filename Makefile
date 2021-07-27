@@ -18,3 +18,6 @@ build-prometheus-config-reloader-v0.43.2:
 
 build-thanos-v0.10.0:
 	${MAKE} -C thanos/v0.10.0
+
+build-metrics-server-0.4.2-debian-10-r58:
+	${MAKE} -C metrics-server/0.4.2-debian-10-r58
