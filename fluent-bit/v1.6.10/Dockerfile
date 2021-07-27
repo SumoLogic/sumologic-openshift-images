@@ -2,7 +2,7 @@ FROM registry.access.redhat.com/ubi8/ubi:8.4 as builder
 
 ARG BISON_VERSION=3.7
 ARG FLEX_VERSION=2.6.4
-ARG FLUENT_BIT_VERSION=1.7.2
+ARG FLUENT_BIT_VERSION=1.6.10
 
 RUN dnf update && \
     dnf install -y cmake diffutils gcc gcc-c++ libpq-devel m4 make openssl-devel systemd-devel tar unzip wget && \
@@ -22,21 +22,36 @@ RUN wget https://github.com/westes/flex/files/981163/flex-${FLEX_VERSION}.tar.gz
     make && \
     make install
  
+
+RUN mkdir -p /fluent-bit/bin /fluent-bit/etc /fluent-bit/log /tmp/src/
+
 RUN wget https://github.com/fluent/fluent-bit/archive/refs/tags/v${FLUENT_BIT_VERSION}.tar.gz && \
-    mkdir -p /fluent-bit/bin /fluent-bit/etc /fluent-bit/log && \
-    tar -xzvf v${FLUENT_BIT_VERSION}.tar.gz -C /fluent-bit/ && \
-    rm v${FLUENT_BIT_VERSION}.tar.gz && \
-    cd /fluent-bit/fluent-bit-${FLUENT_BIT_VERSION}/ && \
-    cmake -DFLB_RELEASE=On -DFLB_TLS=On && make && install bin/fluent-bit /fluent-bit/bin/ && \
-    cp /fluent-bit/fluent-bit-${FLUENT_BIT_VERSION}/conf/*.conf /fluent-bit/etc/ && \
-    cp /fluent-bit/fluent-bit-${FLUENT_BIT_VERSION}/LICENSE /fluent-bit/ && \
-    rm -rf /fluent-bit/fluent-bit-${FLUENT_BIT_VERSION}/
+    tar -xzvf v${FLUENT_BIT_VERSION}.tar.gz -C  /tmp/src/ --strip-components=1 && \
+    rm v${FLUENT_BIT_VERSION}.tar.gz
+
+WORKDIR /tmp/src/build/
+RUN cmake -DFLB_DEBUG=Off \
+          -DFLB_TRACE=Off \
+          -DFLB_JEMALLOC=On \
+          -DFLB_TLS=On \
+          -DFLB_SHARED_LIB=Off \
+          -DFLB_EXAMPLES=Off \
+          -DFLB_HTTP_SERVER=On \
+          -DFLB_IN_SYSTEMD=On \
+          -DFLB_OUT_KAFKA=On \
+          -DFLB_OUT_PGSQL=On ../
+
+RUN make -j $(getconf _NPROCESSORS_ONLN)
+RUN install bin/fluent-bit /fluent-bit/bin/
+
+# Configuration files
+RUN cp /tmp/src/conf/*.conf /fluent-bit/etc/
 
 FROM registry.access.redhat.com/ubi8/ubi-minimal:8.4
 
 LABEL name="Fluent Bit" \
       vendor="SumoLogic" \
-      version="1.7.2" \
+      version="1.6.10" \
       release="1" \
       summary="UBI based Fluent Bit" \
       description="Fluent Bit is a fast Log Processor and Forwarder"
@@ -44,7 +59,7 @@ LABEL name="Fluent Bit" \
 RUN microdnf update && microdnf install -y openssl libpq systemd && microdnf clean all
 
 COPY --from=builder /fluent-bit /fluent-bit
-COPY --from=builder /fluent-bit/LICENSE /licenses/
+COPY --from=builder /tmp/src/LICENSE /licenses/
 
 EXPOSE 2020
 CMD ["/fluent-bit/bin/fluent-bit", "-c", "/fluent-bit/etc/fluent-bit.conf"]
