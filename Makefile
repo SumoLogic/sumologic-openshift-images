@@ -21,3 +21,6 @@ build-thanos-v0.10.0:
 
 build-metrics-server-0.4.2-debian-10-r58:
 	${MAKE} -C metrics-server/0.4.2-debian-10-r58
+
+build-sumologic-kubernetes-setup-v3.0.0:
+	${MAKE} -C sumologic-kubernetes-setup/v3.0.0
