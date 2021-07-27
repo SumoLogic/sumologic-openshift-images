@@ -1,5 +1,6 @@
 ## This is copy of the source/Dockerfile
 ## with additional clean up of the git submodule state
+## ref: https://github.com/kubernetes/kube-state-metrics/blob/b3fa5852d755c912c2601c53781a58567c822b81/Dockerfile
 ARG GOVERSION=1.16
 FROM golang:${GOVERSION} as builder
 ARG GOARCH
