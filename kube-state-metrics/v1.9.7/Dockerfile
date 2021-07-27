@@ -16,7 +16,7 @@ LABEL name="Kube-state-metrics" \
 COPY --from=builder \
     /kube-state-metrics \
     /
-ADD https://raw.githubusercontent.com/kubernetes/kube-state-metrics/b3fa5852d755c912c2601c53781a58567c822b81/LICENSE\
+ADD https://raw.githubusercontent.com/kubernetes/kube-state-metrics/b3fa5852d755c912c2601c53781a58567c822b81/LICENSE \
     /licenses/LICENSE
 
 USER nobody
