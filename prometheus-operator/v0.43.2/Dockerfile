@@ -1,14 +1,6 @@
-## This is copy of the source/Dockerfile with additional building pre-step
+## Use original image to copy files from
 ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/b86ab77239f2a11ee69ad05b24122958d8b2df5b/Dockerfile
-## Build prometheus-operator
-ARG GOVERSION=1.16
-FROM golang:${GOVERSION} as builder
-ARG GOARCH
-ENV GOARCH=${GOARCH}
-WORKDIR /prometheus-operator
-COPY source /prometheus-operator
-
-RUN make operator
+FROM quay.io/prometheus-operator/prometheus-operator:v0.43.2 as builder
 
 ## Build RedHat compliant image
 FROM registry.access.redhat.com/ubi8/ubi:8.4
@@ -21,10 +13,9 @@ LABEL name="Prometheus-operator" \
       description="The Prometheus Operator provides Kubernetes native deployment and management of Prometheus and related monitoring components."
 
 COPY --from=builder \
-    /prometheus-operator/operator \
+    /bin/operator \
     /bin/operator
-COPY --from=builder \
-    /prometheus-operator/LICENSE \
+ADD https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/b86ab77239f2a11ee69ad05b24122958d8b2df5b/LICENSE \
     /licenses/LICENSE
 
 # On busybox 'nobody' has uid `65534'
