@@ -1,3 +1,5 @@
+## This is copy of the source/Dockerfile with additional building pre-step
+## ref: https://github.com/prometheus-operator/prometheus-operator/blob/b86ab77239f2a11ee69ad05b24122958d8b2df5b/Dockerfile
 ## Build prometheus-operator
 ARG GOVERSION=1.16
 FROM golang:${GOVERSION} as builder
