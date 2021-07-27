@@ -10,7 +10,8 @@ LABEL name="Kube-state-metrics" \
       version="1.9.7" \
       release="1" \
       summary="UBI based kube-state-metrics" \
-      description="kube-state-metrics is a simple service that listens to the Kubernetes API server and generates metrics about the state of the objects."
+      description="kube-state-metrics is a simple service that listens to the Kubernetes API server and generates metrics about the state of the objects." \
+      maintainer="collection@sumologic.com"
 
 COPY --from=builder \
     /kube-state-metrics \
