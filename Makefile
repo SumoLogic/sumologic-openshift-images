@@ -27,3 +27,6 @@ build-sumologic-kubernetes-setup-v3.0.0:
 
 build-telegraf-operator-v1.1.1:
 	${MAKE} -C telegraf-operator/v1.1.1
+
+build-ubi-minimal-v8.4:
+	${MAKE} -C ubi-minimal/v8.4
