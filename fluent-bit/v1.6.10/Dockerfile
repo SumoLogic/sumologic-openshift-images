@@ -50,7 +50,7 @@ RUN cp /tmp/src/conf/*.conf /fluent-bit/etc/
 FROM registry.access.redhat.com/ubi8/ubi-minimal:8.4
 
 LABEL name="Fluent Bit" \
-      vendor="SumoLogic" \
+      vendor="Sumo Logic" \
       version="1.6.10" \
       release="1" \
       summary="UBI based Fluent Bit" \

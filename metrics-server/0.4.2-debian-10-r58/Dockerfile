@@ -8,7 +8,7 @@ FROM registry.access.redhat.com/ubi8/ubi:8.4
 COPY --from=builder /opt/bitnami /opt/bitnami
 
 LABEL name="metrics-server" \
-      vendor="SumoLogic" \
+      vendor="Sumo Logic" \
       version="0.4.2-debian-10-r58" \
       release="1" \
       summary="UBI based metrics-server" \

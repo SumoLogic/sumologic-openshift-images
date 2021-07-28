@@ -6,7 +6,7 @@ FROM quay.io/thanos/thanos:v0.10.0 as builder
 FROM registry.access.redhat.com/ubi8/ubi:8.4
 
 LABEL name="Thanos" \
-      vendor="SumoLogic" \
+      vendor="Sumo Logic" \
       version="0.10.0" \
       release="1" \
       summary="UBI based thanos" \

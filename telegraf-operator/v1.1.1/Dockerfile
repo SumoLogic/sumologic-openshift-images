@@ -6,7 +6,7 @@ FROM quay.io/influxdb/telegraf-operator:v1.1.1 as builder
 FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
 
 LABEL name="telegraf-operator" \
-      vendor="SumoLogic" \
+      vendor="Sumo Logic" \
       version="1.1.1" \
       release="1" \
       summary="UBI based telegraf-operator" \

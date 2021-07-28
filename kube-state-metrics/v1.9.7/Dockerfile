@@ -6,7 +6,7 @@ FROM quay.io/coreos/kube-state-metrics:v1.9.7 as builder
 FROM registry.access.redhat.com/ubi8/ubi:8.4
 
 LABEL name="Kube-state-metrics" \
-      vendor="SumoLogic" \
+      vendor="Sumo Logic" \
       version="1.9.7" \
       release="1" \
       summary="UBI based kube-state-metrics" \
