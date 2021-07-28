@@ -8,7 +8,7 @@ ARG OS="linux"
 FROM registry.access.redhat.com/ubi8/ubi:8.4
 
 LABEL name="Prometheus" \
-      vendor="SumoLogic" \
+      vendor="Sumo Logic" \
       version="2.22.1" \
       release="1" \
       summary="UBI based prometheus" \

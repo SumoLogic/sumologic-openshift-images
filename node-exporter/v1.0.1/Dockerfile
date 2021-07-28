@@ -6,7 +6,7 @@ FROM quay.io/prometheus/node-exporter:v1.0.1 as builder
 FROM registry.access.redhat.com/ubi8/ubi:8.4
 
 LABEL name="Node-exporter" \
-      vendor="SumoLogic" \
+      vendor="Sumo Logic" \
       version="1.0.1" \
       release="1" \
       summary="UBI based node-exporter" \

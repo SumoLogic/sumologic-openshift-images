@@ -6,7 +6,7 @@ FROM quay.io/prometheus-operator/prometheus-operator:v0.43.2 as builder
 FROM registry.access.redhat.com/ubi8/ubi:8.4
 
 LABEL name="Prometheus-operator" \
-      vendor="SumoLogic" \
+      vendor="Sumo Logic" \
       version="0.43.2" \
       release="1" \
       summary="UBI based prometheus-operator" \

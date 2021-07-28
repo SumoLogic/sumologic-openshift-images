@@ -2,7 +2,7 @@ FROM registry.access.redhat.com/ubi8/ubi:8.4
 
 ### Required Labels #####
 LABEL name="SumoLogic Kubernetes Setup" \
-      vendor="SumoLogic" \
+      vendor="Sumo Logic" \
       version="3.0.0" \
       release="1" \
       summary="SumoLogic k8s setup job image" \
