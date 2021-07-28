@@ -30,3 +30,6 @@ build-telegraf-operator-v1.1.1:
 
 build-ubi-minimal-v8.4:
 	${MAKE} -C ubi-minimal/v8.4
+
+build-kube-rbac-proxy-v0.5.0:
+	${MAKE} -C kube-rbac-proxy/v0.5.0
