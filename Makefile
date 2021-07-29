@@ -34,8 +34,8 @@ build-ubi-minimal-v8.4:
 build-kube-rbac-proxy-v0.5.0:
 	${MAKE} -C kube-rbac-proxy/v0.5.0
 
-build-telegraf-v1.14.4:
-	${MAKE} -C telegraf/v1.14.4
+build-telegraf-1.14.4:
+	${MAKE} -C telegraf/1.14.4
 
 build-opentelemetry-collector-0.22.0-sumo:
 	${MAKE} -C kube-opentelemetry-collector/0.22.0-sumo
