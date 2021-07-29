@@ -39,3 +39,6 @@ build-telegraf-1.14.4:
 
 build-opentelemetry-collector-0.22.0-sumo:
 	${MAKE} -C kube-opentelemetry-collector/0.22.0-sumo
+
+build-kubernetes-fluentd-1.12.2-sumo-0:
+	${MAKE} -C kubernetes-fluentd/1.12.2-sumo-0
