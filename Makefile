@@ -28,8 +28,13 @@ build-sumologic-kubernetes-setup-v3.0.0:
 build-telegraf-operator-v1.1.1:
 	${MAKE} -C telegraf-operator/v1.1.1
 
-build-ubi-minimal-v8.4:
-	${MAKE} -C ubi-minimal/v8.4
+.PHONY: build-sumo-ubi-minimal-8.4
+build-sumo-ubi-minimal-8.4:
+	${MAKE} -C sumo-ubi-minimal/8.4 build
+
+.PHONY: push-sumo-ubi-minimal-8.4
+push-sumo-ubi-minimal-8.4:
+	${MAKE} -C sumo-ubi-minimal/8.4 push
 
 build-kube-rbac-proxy-v0.5.0:
 	${MAKE} -C kube-rbac-proxy/v0.5.0

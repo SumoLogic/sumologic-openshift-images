@@ -1,10 +1,10 @@
 FROM registry.access.redhat.com/ubi8/ubi-minimal:8.4
 
-LABEL name="ubi8-minimal" \
+LABEL name="sumo-ubi8-minimal" \
       vendor="Sumo Logic" \
       version="8.4" \
       release="1" \
-      summary="Provides the latest release of the minimal Red Hat Universal Base Image 8." \
+      summary="Provides the latest release of the minimal Red Hat Universal Base Image 8 prepared by Sumo Logic." \
       description="The Universal Base Image Minimal is a stripped down image that uses microdnf as a package manager." \
       maintainer="collection@sumologic.com"
 
