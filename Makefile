@@ -33,3 +33,6 @@ build-ubi-minimal-v8.4:
 
 build-kube-rbac-proxy-v0.5.0:
 	${MAKE} -C kube-rbac-proxy/v0.5.0
+
+build-telegraf-v1.14.4:
+	${MAKE} -C telegraf/v1.14.4
