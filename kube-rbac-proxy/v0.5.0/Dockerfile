@@ -23,4 +23,9 @@ ADD https://raw.githubusercontent.com/brancz/kube-rbac-proxy/a6da502b4a4abad511c
     /licenses/LICENSE
 
 ENTRYPOINT ["./kube-rbac-proxy"]
+ENV USER_ID 1000
+ENV USER_NAME kube-rbac-proxy-user
+RUN adduser --uid $USER_ID $USER_NAME
+USER $USER_ID
+
 EXPOSE 8080
