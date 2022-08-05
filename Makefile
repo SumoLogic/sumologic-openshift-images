@@ -45,5 +45,8 @@ build-telegraf-1.14.4:
 build-opentelemetry-collector-0.22.0-sumo:
 	${MAKE} -C opentelemetry-collector/0.22.0-sumo
 
+build-sumologic-otel-collector-0.54.0-sumo-0:
+	${MAKE} -C sumologic-otel-collector/0.54.0-sumo-0
+
 build-kubernetes-fluentd-1.12.2-sumo-0:
 	${MAKE} -C kubernetes-fluentd/1.12.2-sumo-0
