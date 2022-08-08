@@ -25,6 +25,9 @@ build-node-exporter-v1.3.1:
 build-prometheus-config-reloader-v0.43.2:
 	${MAKE} -C prometheus-config-reloader/v0.43.2
 
+build-prometheus-config-reloader-v0.44.0:
+	${MAKE} -C prometheus-config-reloader/v0.44.0
+
 build-thanos-v0.10.0:
 	${MAKE} -C thanos/v0.10.0
 
