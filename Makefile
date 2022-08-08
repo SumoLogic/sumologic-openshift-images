@@ -13,6 +13,9 @@ build-prometheus-v2.22.1:
 build-node-exporter-v1.0.1:
 	${MAKE} -C node-exporter/v1.0.1
 
+build-node-exporter-v1.3.1:
+	${MAKE} -C node-exporter/v1.3.1
+
 build-prometheus-config-reloader-v0.43.2:
 	${MAKE} -C prometheus-config-reloader/v0.43.2
 
