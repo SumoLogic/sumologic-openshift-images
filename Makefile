@@ -66,6 +66,9 @@ build-kube-rbac-proxy-v0.8.0:
 build-telegraf-1.14.4:
 	${MAKE} -C telegraf/1.14.4
 
+build-telegraf-1.21.2:
+	${MAKE} -C telegraf/1.21.2
+
 build-opentelemetry-collector-0.22.0-sumo:
 	${MAKE} -C opentelemetry-collector/0.22.0-sumo
 
