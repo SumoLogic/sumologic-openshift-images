@@ -10,6 +10,9 @@ build-kube-state-metrics-v1.9.8:
 build-prometheus-operator-v0.43.2:
 	${MAKE} -C prometheus-operator/v0.43.2
 
+build-prometheus-operator-v0.44.0:
+	${MAKE} -C prometheus-operator/v0.44.0
+
 build-prometheus-v2.22.1:
 	${MAKE} -C prometheus/v2.22.1
 
