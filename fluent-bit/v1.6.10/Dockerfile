@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi8/ubi:8.4 as builder
+FROM registry.access.redhat.com/ubi8/ubi:8.6 as builder
 
 ARG BISON_VERSION=3.7
 ARG FLEX_VERSION=2.6.4
@@ -47,12 +47,12 @@ RUN install bin/fluent-bit /fluent-bit/bin/
 # Configuration files
 RUN cp /tmp/src/conf/*.conf /fluent-bit/etc/
 
-FROM registry.access.redhat.com/ubi8/ubi-minimal:8.4
+FROM registry.access.redhat.com/ubi8/ubi-minimal:8.6
 
 LABEL name="Fluent Bit" \
       vendor="Sumo Logic" \
       version="1.6.10" \
-      release="1" \
+      release="2" \
       summary="UBI based Fluent Bit" \
       description="Fluent Bit is a fast Log Processor and Forwarder"
 
