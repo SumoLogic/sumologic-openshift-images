@@ -4,6 +4,9 @@ build-fluent-bit-v1.6.10:
 build-kube-state-metrics-v1.9.7:
 	${MAKE} -C kube-state-metrics/v1.9.7
 
+build-kube-state-metrics-v1.9.8:
+	${MAKE} -C kube-state-metrics/v1.9.8
+
 build-prometheus-operator-v0.43.2:
 	${MAKE} -C prometheus-operator/v0.43.2
 
