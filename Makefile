@@ -39,6 +39,9 @@ push-sumo-ubi-minimal-8.4:
 build-kube-rbac-proxy-v0.5.0:
 	${MAKE} -C kube-rbac-proxy/v0.5.0
 
+build-kube-rbac-proxy-v0.8.0:
+	${MAKE} -C kube-rbac-proxy/v0.8.0
+
 build-telegraf-1.14.4:
 	${MAKE} -C telegraf/1.14.4
 
