@@ -1,5 +1,5 @@
 ## Use original image to copy files from
-## ref: https://github.com/brancz/kube-rbac-proxy/blob/2924b3a197171acc78dfc275c828484d00061d43/Dockerfile
+## ref: https://github.com/brancz/kube-rbac-proxy/blob/v0.8.0/Dockerfile
 FROM gcr.io/kubebuilder/kube-rbac-proxy:v0.8.0 as builder
 
 ## Build RedHat compliant image
@@ -19,7 +19,7 @@ RUN yum update -y \
 COPY --from=builder \
     /usr/local/bin/kube-rbac-proxy \
     /usr/local/bin/kube-rbac-proxy
-ADD https://raw.githubusercontent.com/brancz/kube-rbac-proxy/a6da502b4a4abad511cb1afa87b0b52c74a89987/LICENSE \
+ADD https://raw.githubusercontent.com/brancz/kube-rbac-proxy/v0.8.0/LICENSE \
     /licenses/LICENSE
 
 ENTRYPOINT ["/usr/local/bin/kube-rbac-proxy"]
