@@ -1,5 +1,5 @@
 ## Use original image to copy files from
-## ref: https://github.com/prometheus-operator/prometheus-operator/blob/d8b7d3766225908d0239fd0d78258892cd0fc384/Dockerfile
+## ref: https://github.com/prometheus-operator/prometheus-operator/blob/v0.44.0/Dockerfile
 FROM quay.io/prometheus-operator/prometheus-operator:v0.44.0 as builder
 
 ## Build RedHat compliant image
@@ -16,7 +16,7 @@ LABEL name="Prometheus-operator" \
 COPY --from=builder \
     /bin/operator \
     /bin/operator
-ADD https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/b86ab77239f2a11ee69ad05b24122958d8b2df5b/LICENSE \
+ADD https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.44.0/LICENSE \
     /licenses/LICENSE
 
 # On busybox 'nobody' has uid `65534'
