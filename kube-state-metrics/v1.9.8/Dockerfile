@@ -1,5 +1,5 @@
 ## Use original image to copy files from
-## ref: https://github.com/kubernetes/kube-state-metrics/blob/e72315512a38653b19dcfe4429f93eadedc0ea96/Dockerfile
+## ref: https://github.com/kubernetes/kube-state-metrics/blob/v1.9.8/Dockerfile
 FROM quay.io/coreos/kube-state-metrics:v1.9.8 as builder
 
 ## Build RedHat compliant image
@@ -16,7 +16,7 @@ LABEL name="Kube-state-metrics" \
 COPY --from=builder \
     /kube-state-metrics \
     /
-ADD https://raw.githubusercontent.com/kubernetes/kube-state-metrics/b3fa5852d755c912c2601c53781a58567c822b81/LICENSE \
+ADD https://raw.githubusercontent.com/kubernetes/kube-state-metrics/v1.9.8/LICENSE \
     /licenses/LICENSE
 
 USER nobody
