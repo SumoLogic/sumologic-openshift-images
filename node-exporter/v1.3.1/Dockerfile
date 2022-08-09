@@ -1,5 +1,5 @@
 ## Use original image to copy files from
-## ref: https://github.com/prometheus/node_exporter/blob/a2321e7b940ddcff26873612bccdf7cd4c42b6b6/Dockerfile
+## ref: https://github.com/prometheus/node_exporter/blob/v1.3.1/Dockerfile
 FROM quay.io/prometheus/node-exporter:v1.3.1 as builder
 
 ## Build RedHat compliant image
@@ -16,7 +16,7 @@ LABEL name="Node-exporter" \
 COPY --from=builder \
     /bin/node_exporter \
     /bin/node_exporter
-ADD https://raw.githubusercontent.com/prometheus/node_exporter/3715be6ae899f2a9b9dbfd9c39f3e09a7bd4559f/LICENSE \
+ADD https://raw.githubusercontent.com/prometheus/node_exporter/v1.3.1/LICENSE \
     /licenses/LICENSE
 
 EXPOSE      9100
