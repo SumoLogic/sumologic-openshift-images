@@ -27,5 +27,6 @@ ADD https://raw.githubusercontent.com/influxdata/influxdata-docker/dd108978ea0e5
 EXPOSE 8125/udp 8092/udp 8094
 
 COPY --from=builder /entrypoint.sh /entrypoint.sh
+USER nobody
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["telegraf"]
