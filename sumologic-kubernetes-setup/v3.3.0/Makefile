@@ -1,4 +1,4 @@
-BUILD_TAG ?= v3.3.0-ubi
+BUILD_TAG ?= 3.3.0-ubi
 IMAGE_NAME = kubernetes-setup
 
 build:
