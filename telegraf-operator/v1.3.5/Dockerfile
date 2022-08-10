@@ -19,4 +19,5 @@ COPY --from=builder /manager .
 ADD https://raw.githubusercontent.com/influxdata/telegraf-operator/v1.3.5/LICENSE \
     /licenses/LICENSE
 
+USER nobody
 ENTRYPOINT ["/manager"]

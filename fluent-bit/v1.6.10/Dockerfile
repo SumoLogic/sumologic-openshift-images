@@ -62,4 +62,5 @@ COPY --from=builder /fluent-bit /fluent-bit
 COPY --from=builder /tmp/src/LICENSE /licenses/
 
 EXPOSE 2020
+USER nobody
 CMD ["/fluent-bit/bin/fluent-bit", "-c", "/fluent-bit/etc/fluent-bit.conf"]
