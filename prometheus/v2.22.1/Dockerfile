@@ -5,12 +5,12 @@ FROM quay.io/prometheus/prometheus:v2.22.1 as builder
 ## Build RedHat compliant image
 ARG ARCH="amd64"
 ARG OS="linux"
-FROM registry.access.redhat.com/ubi8/ubi:8.4
+FROM registry.access.redhat.com/ubi8/ubi:8.6
 
 LABEL name="Prometheus" \
       vendor="Sumo Logic" \
       version="2.22.1" \
-      release="1" \
+      release="2" \
       summary="UBI based prometheus" \
       description="Prometheus, a Cloud Native Computing Foundation project, is a systems and service monitoring system." \
       maintainer="collection@sumologic.com"
