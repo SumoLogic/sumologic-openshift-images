@@ -19,4 +19,6 @@ COPY --from=builder \
 ADD https://raw.githubusercontent.com/thanos-io/thanos/v0.25.2/LICENSE \
     /licenses/LICENSE
 
+USER nobody
+
 ENTRYPOINT [ "/bin/thanos" ]
