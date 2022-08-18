@@ -7,12 +7,15 @@ ARG ARCH="amd64"
 ARG OS="linux"
 FROM registry.access.redhat.com/ubi8/ubi:8.6
 
+ENV SUMMARY="UBI based prometheus" \
+    DESCRIPTION="Prometheus, a Cloud Native Computing Foundation project, is a systems and service monitoring system."
+
 LABEL name="Prometheus" \
       vendor="Sumo Logic" \
       version="2.22.1" \
       release="2" \
-      summary="UBI based prometheus" \
-      description="Prometheus, a Cloud Native Computing Foundation project, is a systems and service monitoring system." \
+      summary="$SUMMARY" \
+      description="$DESCRIPTION" \
       maintainer="collection@sumologic.com"
 
 ARG ARCH="amd64"
