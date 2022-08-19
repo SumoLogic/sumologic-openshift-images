@@ -16,6 +16,7 @@ LABEL name="Prometheus" \
       release="2" \
       summary="$SUMMARY" \
       description="$DESCRIPTION" \
+      io.k8s.description="$DESCRIPTION" \
       maintainer="collection@sumologic.com"
 
 ARG ARCH="amd64"
