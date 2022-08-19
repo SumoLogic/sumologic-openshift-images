@@ -5,12 +5,16 @@ FROM quay.io/prometheus-operator/prometheus-config-reloader:v0.44.0 as builder
 ## Build RedHat compliant image
 FROM registry.access.redhat.com/ubi8/ubi:8.6
 
+ENV  SUMMARY="UBI based prometheus-config-reloader" \
+     DESCRIPTION="Prometheus configuration reloader"
+
 LABEL name="Prometheus-config-reloader" \
       vendor="Sumo Logic" \
       version="0.44.0" \
       release="2" \
-      summary="UBI based prometheus-config-reloader" \
-      description="Prometheus configuration reloader" \
+      summary="$SUMMARY" \
+      description="$DESCRIPTION" \
+      io.k8s.description="$DESCRIPTION" \
       maintainer="collection@sumologic.com"
 
 COPY --from=builder \

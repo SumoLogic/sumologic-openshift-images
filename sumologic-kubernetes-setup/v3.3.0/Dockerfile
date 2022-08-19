@@ -1,12 +1,15 @@
 FROM registry.access.redhat.com/ubi8/ubi:8.6
 
+ENV SUMMARY="SumoLogic k8s setup job image" \
+    DESCRIPTION="This image is used to setup the kubernetes cluster and SumoLogic environment before installing SumoLogic collection helm chart"
 ### Required Labels #####
 LABEL name="SumoLogic Kubernetes Setup" \
       vendor="Sumo Logic" \
       version="3.3.0" \
       release="2" \
-      summary="SumoLogic k8s setup job image" \
-      description="This image is used to setup the kubernetes cluster and SumoLogic environment before installing SumoLogic collection helm chart" \
+      summary="$SUMMARY" \
+      description="$DESCRIPTION" \
+      io.k8s.description="$DESCRIPTION" \
       maintainer="collection@sumologic.com"
 
 ### Required End User Agreements ###

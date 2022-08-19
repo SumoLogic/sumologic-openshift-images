@@ -56,12 +56,16 @@ CMD ["fluentd"]
 
 FROM fluentd
 
+ENV SUMMARY="UBI based kubernetes-fluentd" \
+    DESCRIPTION="Kubernetes-fluentd is a custom Fluentd build with plugins used by Sumo Logic Kubernetes Collection."
+
 LABEL name="Kubernetes-fluentd" \
       vendor="Sumo Logic" \
       version="1.14.6-sumo-5" \
       release="2" \
-      summary="UBI based kubernetes-fluentd" \
-      description="Kubernetes-fluentd is a custom Fluentd build with plugins used by Sumo Logic Kubernetes Collection." \
+      summary="$SUMMARY" \
+      description="$DESCRIPTION" \
+      io.k8s.description="$DESCRIPTION" \
       maintainer="collection@sumologic.com"
 
 ADD https://raw.githubusercontent.com/SumoLogic/sumologic-kubernetes-fluentd/v1.14.6-sumo-5//LICENSE \
