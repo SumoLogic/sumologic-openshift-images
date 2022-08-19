@@ -5,12 +5,16 @@ FROM public.ecr.aws/sumologic/sumologic-otel-collector:0.56.0-sumo-0 as builder
 ## Build RedHat compliant image
 FROM registry.access.redhat.com/ubi8/ubi-minimal:8.6
 
+ENV SUMMARY="UBI based sumologic-otel-collector" \
+    DESCRIPTION="Sumo Logic Distribution for OpenTelemetry Collector is a Sumo Logic-supported distribution of the OpenTelemetry Collector. It is a single agent to send logs, metrics and traces to Sumo Logic."
+
 LABEL name="sumologic-otel-collector" \
       vendor="Sumo Logic" \
       version="0.56.0-sumo" \
       release="3" \
-      summary="UBI based sumologic-otel-collector" \
-      description="Sumo Logic Distribution for OpenTelemetry Collector is a Sumo Logic-supported distribution of the OpenTelemetry Collector. It is a single agent to send logs, metrics and traces to Sumo Logic." \
+      summary="$SUMMARY" \
+      description="$DESCRIPTION" \
+      io.k8s.description="$DESCRIPTION" \
       maintainer="collection@sumologic.com"
 
 ADD https://github.com/SumoLogic/sumologic-otel-collector/blob/v0.56.0-sumo-0/LICENSE \
