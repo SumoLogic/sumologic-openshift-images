@@ -5,12 +5,16 @@ FROM quay.io/prometheus/node-exporter:v1.3.1 as builder
 ## Build RedHat compliant image
 FROM registry.access.redhat.com/ubi8/ubi:8.6
 
+ENV summary="UBI based node-exporter" \
+    description="Prometheus exporter for hardware and OS metrics exposed by *NIX kernels, written in Go with pluggable metric collectors."
+
 LABEL name="Node-exporter" \
       vendor="Sumo Logic" \
       version="1.3.1" \
       release="2" \
-      summary="UBI based node-exporter" \
-      description="Prometheus exporter for hardware and OS metrics exposed by *NIX kernels, written in Go with pluggable metric collectors." \
+      summary="$SUMMARY" \
+      description="$DESCRIPTION" \
+      io.k8s.description="$DESCRIPTION" \
       maintainer="collection@sumologic.com"
 
 COPY --from=builder \

@@ -49,12 +49,17 @@ RUN cp /tmp/src/conf/*.conf /fluent-bit/etc/
 
 FROM registry.access.redhat.com/ubi8/ubi-minimal:8.6
 
+ENV SUMMARY="UBI based Fluent Bit" \
+    DESCRIPTION="Fluent Bit is a fast Log Processor and Forwarder"
+
 LABEL name="Fluent Bit" \
       vendor="Sumo Logic" \
       version="1.6.10" \
       release="2" \
-      summary="UBI based Fluent Bit" \
-      description="Fluent Bit is a fast Log Processor and Forwarder"
+      summary="$SUMMARY" \
+      description="$DESCRIPTION" \
+      io.k8s.description="$DESCRIPTION" \
+      maintainer="collection@sumologic.com"
 
 RUN microdnf update && microdnf install -y openssl libpq systemd && microdnf clean all
 

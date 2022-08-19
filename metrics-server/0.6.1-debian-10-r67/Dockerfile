@@ -7,12 +7,16 @@ FROM registry.access.redhat.com/ubi8/ubi:8.6
 
 COPY --from=builder /opt/bitnami /opt/bitnami
 
+ENV SUMMARY="UBI based metrics-server" \
+    DESCRIPTION="Metrics Server is a cluster-wide aggregator of resource usage data. Metrics Server collects metrics from the Summary API, exposed by Kubelet on each node."
+
 LABEL name="metrics-server" \
       vendor="Sumo Logic" \
       version="0.6.1-debian-10-r67" \
       release="2" \
-      summary="UBI based metrics-server" \
-      description="Metrics Server is a cluster-wide aggregator of resource usage data. Metrics Server collects metrics from the Summary API, exposed by Kubelet on each node." \
+      summary="$SUMMARY" \
+      description="$DESCRIPTION" \
+      io.k8s.description="$DESCRIPTION" \
       maintainer="collection@sumologic.com"
 
 ADD https://raw.githubusercontent.com/bitnami/bitnami-docker-metrics-server/0.6.1-debian-10-r67/LICENSE.md \

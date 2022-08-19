@@ -5,12 +5,16 @@ FROM telegraf:1.21.2 as builder
 ## Build RedHat compliant image
 FROM registry.access.redhat.com/ubi8/ubi-minimal:8.6
 
+ENV SUMMARY="UBI based telegraf" \
+    DESCRIPTION="Telegraf is an agent for collecting metrics and writing them to InfluxDB or other outputs."
+
 LABEL name="telegraf" \
       vendor="Sumo Logic" \
       version="1.21.2" \
       release="2" \
-      summary="UBI based telegraf" \
-      description="Telegraf is an agent for collecting metrics and writing them to InfluxDB or other outputs." \
+      summary="$SUMMARY" \
+      description="$DESCRIPTION" \
+      io.k8s.description="$DESCRIPTION" \
       maintainer="collection@sumologic.com"
 
 COPY --from=builder /usr/bin/telegraf \

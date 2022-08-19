@@ -5,12 +5,16 @@ FROM quay.io/coreos/kube-state-metrics:v1.9.8 as builder
 ## Build RedHat compliant image
 FROM registry.access.redhat.com/ubi8/ubi:8.6
 
+ENV SUMMARY="UBI based kube-state-metrics" \
+    DESCRIPTION="kube-state-metrics is a simple service that listens to the Kubernetes API server and generates metrics about the state of the objects."
+
 LABEL name="Kube-state-metrics" \
       vendor="Sumo Logic" \
       version="1.9.8" \
       release="2" \
-      summary="UBI based kube-state-metrics" \
-      description="kube-state-metrics is a simple service that listens to the Kubernetes API server and generates metrics about the state of the objects." \
+      summary="$SUMMARY" \
+      description="$DESCRIPTION" \
+      io.k8s.description="$DESCRIPTION" \
       maintainer="collection@sumologic.com"
 
 COPY --from=builder \
