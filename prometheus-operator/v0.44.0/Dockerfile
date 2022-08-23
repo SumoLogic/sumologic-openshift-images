@@ -5,8 +5,8 @@ FROM quay.io/prometheus-operator/prometheus-operator:v0.44.0 as builder
 ## Build RedHat compliant image
 FROM registry.access.redhat.com/ubi8/ubi:8.6
 
-ENV summary="UBI based prometheus-operator" \
-    description="The Prometheus Operator provides Kubernetes native deployment and management of Prometheus and related monitoring components."
+ENV SUMMARY="UBI based prometheus-operator" \
+    DESCRIPTION="The Prometheus Operator provides Kubernetes native deployment and management of Prometheus and related monitoring components."
 
 LABEL name="Prometheus-operator" \
       vendor="Sumo Logic" \
