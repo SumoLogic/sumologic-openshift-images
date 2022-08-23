@@ -9,12 +9,17 @@ FROM registry.access.redhat.com/ubi8/ubi:8.6
 
 WORKDIR /
 COPY --from=builder  /manager .
+
+ENV SUMMARY="UBI based opentelemetry operator" \
+    DESCRIPTION="OpenTelemetry Operator manages OpenTelemetry Collector and auto-instrumentation of the workloads using OpenTelemetry instrumentation libraries"
+
 LABEL name="opentelemetry-operator" \
       vendor="Sumo Logic" \
       version="0.51.0" \
       release="1" \
-      summary="UBI based opentelemetry operator" \
-      description="OpenTelemetry Operator manages OpenTelemetry Collector and auto-instrumentation of the workloads using OpenTelemetry instrumentation libraries" \
+      summary="$SUMMARY" \
+      description="$DESCRIPTION" \
+      io.k8s.description="$DESCRIPTION" \
       maintainer="collection@sumologic.com"
 
 ADD https://raw.githubusercontent.com/open-telemetry/opentelemetry-operator/v0.51.0/LICENSE \
