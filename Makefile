@@ -46,6 +46,9 @@ build-sumologic-kubernetes-setup-v3.0.0:
 build-sumologic-kubernetes-setup-v3.3.0:
 	${MAKE} -C sumologic-kubernetes-setup/v3.3.0
 
+build-sumologic-kubernetes-setup-v3.4.0:
+	${MAKE} -C sumologic-kubernetes-setup/v3.4.0
+
 build-telegraf-operator-v1.1.1:
 	${MAKE} -C telegraf-operator/v1.1.1
 
