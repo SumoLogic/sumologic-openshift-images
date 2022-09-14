@@ -84,6 +84,9 @@ build-sumologic-otel-collector-0.54.0-sumo-0:
 build-sumologic-otel-collector-0.56.0-sumo-0:
 	${MAKE} -C sumologic-otel-collector/0.56.0-sumo-0
 
+build-sumologic-otel-collector-0.57.2-sumo-1:
+	${MAKE} -C sumologic-otel-collector/0.57.2-sumo-1
+
 build-kubernetes-fluentd-1.12.2-sumo-0:
 	${MAKE} -C kubernetes-fluentd/1.12.2-sumo-0
 
