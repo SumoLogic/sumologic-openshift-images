@@ -23,7 +23,7 @@ ENV MONITORS_VERSION=v1.0.7
 ARG TARGETPLATFORM
 
 RUN yum update -y \
- && yum install unzip git -y \
+ && yum install unzip git jq -y \
  && yum clean all \
  && if [ "${TARGETPLATFORM}" = "linux/amd64" ]; then TERRAFORM_PLATFORM="linux_amd64"; fi; \
     if [ "${TARGETPLATFORM}" = "linux/arm/v7" ]; then TERRAFORM_PLATFORM="linux_arm"; fi; \
