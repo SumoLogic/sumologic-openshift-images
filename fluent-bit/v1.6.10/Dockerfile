@@ -1,6 +1,6 @@
-FROM registry.access.redhat.com/ubi8/ubi:8.6 as builder
+FROM registry.access.redhat.com/ubi8/ubi:8.8 as builder
 
-ARG BISON_VERSION=3.7
+ARG BISON_VERSION=3.8.2
 ARG FLEX_VERSION=2.6.4
 ARG FLUENT_BIT_VERSION=1.6.10
 
@@ -22,7 +22,6 @@ RUN wget https://github.com/westes/flex/files/981163/flex-${FLEX_VERSION}.tar.gz
     make && \
     make install
  
-
 RUN mkdir -p /fluent-bit/bin /fluent-bit/etc /fluent-bit/log /tmp/src/
 
 RUN wget https://github.com/fluent/fluent-bit/archive/refs/tags/v${FLUENT_BIT_VERSION}.tar.gz && \
@@ -47,7 +46,7 @@ RUN install bin/fluent-bit /fluent-bit/bin/
 # Configuration files
 RUN cp /tmp/src/conf/*.conf /fluent-bit/etc/
 
-FROM registry.access.redhat.com/ubi8/ubi-minimal:8.6
+FROM registry.access.redhat.com/ubi8-minimal:8.8
 
 ENV SUMMARY="UBI based Fluent Bit" \
     DESCRIPTION="Fluent Bit is a fast Log Processor and Forwarder"
@@ -55,7 +54,7 @@ ENV SUMMARY="UBI based Fluent Bit" \
 LABEL name="Fluent Bit" \
       vendor="Sumo Logic" \
       version="1.6.10" \
-      release="2" \
+      release="3" \
       summary="$SUMMARY" \
       description="$DESCRIPTION" \
       io.k8s.description="$DESCRIPTION" \
