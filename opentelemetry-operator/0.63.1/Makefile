@@ -1,2 +1,2 @@
 build:
-	docker build . -t opentelemetry-collector:0.63.1
+	docker build . -t opentelemetry-operator:0.63.1
