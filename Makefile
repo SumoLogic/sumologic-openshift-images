@@ -98,3 +98,6 @@ build-opentelemetry-operator-0.51.0:
 
 build-opentelemetry-operator-0.63.1:
 	${MAKE} -C opentelemetry-operator/0.63.1
+
+build-opentelemetry-collector-contib-0.64.1:
+	${MAKE} -C opentelemetry-collector-contrib/0.64.1
