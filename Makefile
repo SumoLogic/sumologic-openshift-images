@@ -95,3 +95,6 @@ build-kubernetes-fluentd-1.14.6-sumo-5:
 
 build-opentelemetry-operator-0.51.0:
 	${MAKE} -C opentelemetry-operator/0.51.0
+
+build-opentelemetry-operator-0.63.1:
+	${MAKE} -C opentelemetry-operator/0.63.1
