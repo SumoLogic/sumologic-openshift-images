@@ -6,6 +6,9 @@ FROM otel/opentelemetry-collector-contrib:0.64.1 as builder
 ## Build RedHat compliant image
 FROM registry.access.redhat.com/ubi8/ubi:8.8
 
+ARG USER_UID=10001
+USER ${USER_UID}
+
 WORKDIR /
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 COPY --from=builder /etc/otelcol-contrib/config.yaml /etc/otelcol-contrib/config.yaml
