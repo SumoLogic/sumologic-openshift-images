@@ -8,17 +8,14 @@ set -euo pipefail
 helm repo add sumologic https://sumologic.github.io/sumologic-kubernetes-collection 2> /dev/null 1>&2
 helm repo update 2> /dev/null 1>&2
 
-# Get values of all `image` prperties, and every of every line containing `-image` word, which is usually part of argument name in operators
+# Get values of all `image` properties, and of every line containing `-image` word, which is usually part of argument name in operators
 helm template collection sumologic/sumologic \
   --namespace sumologic \
   --debug \
   --version "${VERSION}" \
   -f ./scripts/values.yaml \
   2> /dev/null | \
-  grep -P '(^\s*image:|-image)' | \
-  sed 's/ *//g' | \
-  sed 's/^.*=//g' | \
-  sed 's/image://g' | \
+  grep -oP '(?<=image: |-image=|prometheus-config-reloader=).*?$' | \
   sed 's/"//g' | \
   sort | \
   uniq
