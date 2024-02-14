@@ -1,0 +1,17 @@
+sumologic:
+  accessId: dummy
+  accessKey: dummy
+metrics-server:
+  enabled: true
+  apiService:
+    create: false
+otelagent:
+  enabled: true
+telegraf-operator:
+  enabled: true
+falco:
+  enabled: true
+tailing-sidecar-operator:
+  enabled: true
+opentelemetry-operator:
+  enabled: true
