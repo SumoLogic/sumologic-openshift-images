@@ -4,6 +4,7 @@ import subprocess
 import sys
 import argparse
 import re
+import urllib.request
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -20,6 +21,16 @@ def get_sumo_images(version, values):
     matches = re.findall(r'(?:\s*image:\s*|-image=|prometheus-config-reloader=)(.*?)\\n', str(output))
     if matches == None:
         sys.exit(-1)
+    
+    for match in matches:
+        # Detect Fluent Bit image used by Tailing Sidecar
+        if re.match('.*tailing-sidecar:.*', match):
+            content = urllib.request.urlopen(f"https://raw.githubusercontent.com/SumoLogic/tailing-sidecar/v{match.split(':')[-1]}/sidecar/Dockerfile").read()
+            fluent_bit_matches = re.findall('FROM (fluent/fluent-bit:.*?)\\\\n', str(content))
+            if fluent_bit_matches == None:
+                sys.exit(-1)
+            matches.extend(fluent_bit_matches)
+            
 
     # use set to remove duplicates
     return sorted({match.strip('\'"') for match in matches})
