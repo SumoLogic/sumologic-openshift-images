@@ -4,6 +4,7 @@ import subprocess
 import sys
 import argparse
 import re
+import urllib.error
 import urllib.request
 
 def parse_args():
@@ -25,7 +26,10 @@ def get_sumo_images(version, values):
     for match in matches:
         # Detect Fluent Bit image used by Tailing Sidecar
         if re.match('.*tailing-sidecar:.*', match):
-            content = urllib.request.urlopen(f"https://raw.githubusercontent.com/SumoLogic/tailing-sidecar/v{match.split(':')[-1]}/sidecar/Dockerfile").read()
+            try:
+                content = urllib.request.urlopen(f"https://raw.githubusercontent.com/SumoLogic/tailing-sidecar/v{match.split(':')[-1]}/sidecar/fluentbit/Dockerfile").read()
+            except urllib.error.HTTPError:
+                content = urllib.request.urlopen(f"https://raw.githubusercontent.com/SumoLogic/tailing-sidecar/v{match.split(':')[-1]}/sidecar/Dockerfile").read()
             fluent_bit_matches = re.findall('FROM (fluent/fluent-bit:.*?)\\\\n', str(content))
             if fluent_bit_matches == None:
                 sys.exit(-1)
