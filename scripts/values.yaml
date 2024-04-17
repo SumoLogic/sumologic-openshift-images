@@ -15,3 +15,5 @@ tailing-sidecar-operator:
   enabled: true
 opentelemetry-operator:
   enabled: true
+  createDefaultInstrumentation: true
+  instrumentationNamespaces: "sumologic"
