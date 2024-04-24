@@ -1,6 +1,9 @@
 sumologic:
   accessId: dummy
   accessKey: dummy
+  metrics:
+    remoteWriteProxy:
+      enabled: true
 metrics-server:
   enabled: true
   apiService:
@@ -17,3 +20,8 @@ opentelemetry-operator:
   enabled: true
   createDefaultInstrumentation: true
   instrumentationNamespaces: "sumologic"
+kube-prometheus-stack:
+  prometheusOperator:
+    enabled: true
+  prometheus:
+    enabled: false
