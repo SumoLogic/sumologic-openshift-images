@@ -24,4 +24,4 @@ kube-prometheus-stack:
   prometheusOperator:
     enabled: true
   prometheus:
-    enabled: false
+    enabled: true
