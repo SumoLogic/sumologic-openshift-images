@@ -15,7 +15,7 @@ for IMAGE in ${IMAGES}; do
     VERSION="${IMAGE##*:}"
     # Strip v from version
     UPSTREAM_VERSION="${VERSION##[v]}"
-    # get name as other 
+    # get name as string between `/` and `:`
     NAME="${IMAGE%%:*}"
     NAME="${NAME##*/}"
     UBI_VERSION="${VERSION}-ubi"
