@@ -3,7 +3,7 @@ ARG RELEASE
 ARG UBI_IMAGE=registry.access.redhat.com/ubi8/ubi:8.6
 ## Use original image to copy files from
 ## ref: https://github.com/brancz/kube-rbac-proxy/blob/${UPSTREAM_VERSION}/Dockerfile
-FROM gcr.io/kubebuilder/kube-rbac-proxy:v${UPSTREAM_VERSION} as builder
+FROM public.ecr.aws/sumologic/kube-rbac-proxy:v${UPSTREAM_VERSION} as builder
 
 ## Build RedHat compliant image
 FROM ${UBI_IMAGE}
