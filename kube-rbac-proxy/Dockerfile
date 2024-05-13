@@ -1,5 +1,4 @@
 ARG UPSTREAM_VERSION
-ARG RELEASE
 ARG UBI_IMAGE=registry.access.redhat.com/ubi8/ubi:8.6
 ## Use original image to copy files from
 ## ref: https://github.com/brancz/kube-rbac-proxy/blob/${UPSTREAM_VERSION}/Dockerfile
@@ -8,6 +7,7 @@ FROM public.ecr.aws/sumologic/kube-rbac-proxy:v${UPSTREAM_VERSION} as builder
 ## Build RedHat compliant image
 FROM ${UBI_IMAGE}
 ARG UPSTREAM_VERSION
+ARG RELEASE
 
 ENV SUMMARY="UBI based kube-rbac-proxy" \
     DESCRIPTION="The kube-rbac-proxy is a small HTTP proxy for a single upstream, that can perform RBAC authorization against the Kubernetes API using SubjectAccessReview."
