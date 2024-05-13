@@ -8,7 +8,7 @@ IMAGES=$(./scripts/list-images.py \
     --fetch-base \
     --values scripts/values.yaml \
     --version "${HELM_CHART_VERSION}" \
-        | grep -E 'kube-rbac-proxy|metrics-server')
+        | grep -E 'kube-rbac-proxy|metrics-server|prometheus-config-reloader|prometheus-operator')
 
 for IMAGE in ${IMAGES}; do
     # Treat everything after `:` as version
