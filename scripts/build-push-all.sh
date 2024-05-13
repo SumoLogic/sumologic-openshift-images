@@ -8,7 +8,7 @@ IMAGES=$(./scripts/list-images.py \
     --fetch-base \
     --values scripts/values.yaml \
     --version "${HELM_CHART_VERSION}" \
-        | grep kube-rbac-proxy)
+        | grep -E 'kube-rbac-proxy|metrics-server')
 
 for IMAGE in ${IMAGES}; do
     # Treat everything after `:` as version
@@ -22,7 +22,6 @@ for IMAGE in ${IMAGES}; do
 
     echo "${SUMO_REGISTRY}${NAME}:${UBI_VERSION}"
 
-    # 
     if docker pull "${SUMO_REGISTRY}${NAME}:${UBI_VERSION}"; then
         # as image exist, we can go to the next one
         continue
