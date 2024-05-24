@@ -2,7 +2,7 @@
 
 set -e
 
-HELM_CHART_VERSION=v3
+HELM_CHART_VERSION=v4
 SUMO_REGISTRY="public.ecr.aws/sumologic/"
 PUSH=""
 
