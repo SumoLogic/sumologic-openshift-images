@@ -25,7 +25,7 @@ LABEL name="opentelemetry-operator" \
     io.k8s.description="$DESCRIPTION" \
     maintainer="opensource-collection-team@sumologic.com"
 
-ADD https://raw.githubusercontent.com/open-telemetry/opentelemetry-operator/v{UPSTREAM_VERSION}/LICENSE \
+ADD https://raw.githubusercontent.com/open-telemetry/opentelemetry-operator/v${UPSTREAM_VERSION}/LICENSE \
     /licenses/LICENSE
 
 USER 65532:65532
