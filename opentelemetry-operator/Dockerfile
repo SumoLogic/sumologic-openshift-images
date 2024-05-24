@@ -3,7 +3,7 @@ ARG UBI_IMAGE=registry.access.redhat.com/ubi8/ubi:8.6
 ## Use original image to copy files from
 ## ref: https://github.com/open-telemetry/opentelemetry-operator/blob/v0.63.1/Dockerfile
 
-FROM public.ecr.aws/sumologic/opentelemetry-operator:v${UPSTREAM_VERSION} as builder
+FROM public.ecr.aws/sumologic/opentelemetry-operator:${UPSTREAM_VERSION} as builder
 
 ## Build RedHat compliant image
 FROM ${UBI_IMAGE}
