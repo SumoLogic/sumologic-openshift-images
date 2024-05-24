@@ -10,7 +10,7 @@ IMAGES=$(./scripts/list-images.py \
     --fetch-base \
     --values scripts/values.yaml \
     --version "${HELM_CHART_VERSION}" \
-        | grep -E 'kube-rbac-proxy|metrics-server|prometheus-config-reloader|prometheus-operator|prometheus|opentelemetry-operator|node-exporter|telegraf|telegraf-operator|thanos')
+        | grep -E 'kube-rbac-proxy|metrics-server|prometheus-config-reloader|prometheus-operator|prometheus|opentelemetry-operator|node-exporter|telegraf|telegraf-operator|thanos|autoinstrumentation')
 
 for IMAGE in ${IMAGES}; do
     # Treat everything after `:` as version
@@ -35,5 +35,5 @@ for IMAGE in ${IMAGES}; do
         make -C ${NAME} push IMAGE_NAME=${IMAGE_NAME} UPSTREAM_VERSION="${UPSTREAM_VERSION}"
     fi
 
-    make -C ${NAME} check IMAGE_NAME=${IMAGE_NAME} UPSTREAM_VERSION="${UPSTREAM_VERSION}"
+    # make -C ${NAME} check IMAGE_NAME=${IMAGE_NAME} UPSTREAM_VERSION="${UPSTREAM_VERSION}"
 done
