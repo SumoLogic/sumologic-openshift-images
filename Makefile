@@ -101,3 +101,15 @@ build-opentelemetry-operator-0.63.1:
 
 build-opentelemetry-collector-contib-0.64.1:
 	${MAKE} -C opentelemetry-collector-contrib/0.64.1
+
+list-images-v4:
+	./scripts/list-images.py \
+    	--fetch-base \
+    	--values scripts/values.yaml \
+    	--version v4
+
+list-images-v3:
+	./scripts/list-images.py \
+    	--fetch-base \
+    	--values scripts/values.yaml \
+    	--version v3

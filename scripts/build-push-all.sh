@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 HELM_CHART_VERSION=v3
 SUMO_REGISTRY="public.ecr.aws/sumologic/"
 PUSH=""
@@ -8,7 +10,7 @@ IMAGES=$(./scripts/list-images.py \
     --fetch-base \
     --values scripts/values.yaml \
     --version "${HELM_CHART_VERSION}" \
-        | grep -E 'kube-rbac-proxy|metrics-server|prometheus-config-reloader|prometheus-operator')
+        | grep -E 'kube-rbac-proxy|metrics-server|prometheus-config-reloader|prometheus-operator|prometheus|opentelemetry-operator|node-exporter|telegraf|telegraf-operator|thanos')
 
 for IMAGE in ${IMAGES}; do
     # Treat everything after `:` as version
