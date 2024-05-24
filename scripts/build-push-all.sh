@@ -21,17 +21,19 @@ for IMAGE in ${IMAGES}; do
     NAME="${IMAGE%%:*}"
     NAME="${NAME##*/}"
     UBI_VERSION="${VERSION}-ubi"
+    IMAGE_NAME="${SUMO_REGISTRY}${NAME}:${UBI_VERSION}"
 
-    echo "${SUMO_REGISTRY}${NAME}:${UBI_VERSION}"
-
-    if docker pull "${SUMO_REGISTRY}${NAME}:${UBI_VERSION}"; then
+    echo ${IMAGE_NAME}
+    if docker pull ${IMAGE_NAME}; then
         # as image exist, we can go to the next one
         continue
     fi
 
-    make -C ${NAME} build UPSTREAM_VERSION="${UPSTREAM_VERSION}"
+    make -C ${NAME} build IMAGE_NAME=${IMAGE_NAME} UPSTREAM_VERSION="${UPSTREAM_VERSION}"
 
     if [[ -n "${PUSH}" ]]; then
-        make -C ${NAME} push UPSTREAM_VERSION="${UPSTREAM_VERSION}"
+        make -C ${NAME} push IMAGE_NAME=${IMAGE_NAME} UPSTREAM_VERSION="${UPSTREAM_VERSION}"
     fi
+
+    make -C ${NAME} check IMAGE_NAME=${IMAGE_NAME} UPSTREAM_VERSION="${UPSTREAM_VERSION}"
 done

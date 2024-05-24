@@ -12,8 +12,11 @@ ifeq ($(IMAGE_NAME),"")
 endif
 
 build:
-	RELEASE=$(shell docker inspect public.ecr.aws/sumologic/${IMAGE_NAME}:${VERSION}-ubi | jq '.[0].Config.Labels.release | tonumber + 1' --raw-output -e || echo '1') ;\
-	docker build . -t public.ecr.aws/sumologic/${IMAGE_NAME}:${VERSION}-ubi --build-arg UPSTREAM_VERSION=${UPSTREAM_VERSION} --build-arg RELEASE=$${RELEASE}
+	RELEASE=$(shell docker inspect ${IMAGE_NAME} | jq '.[0].Config.Labels.release | tonumber + 1' --raw-output -e || echo '1') ;\
+	docker build . -t ${IMAGE_NAME} --build-arg UPSTREAM_VERSION=${UPSTREAM_VERSION} --build-arg RELEASE=$${RELEASE}
+
+check:
+	preflight check container ${IMAGE_NAME}
 
 push:
-	docker push public.ecr.aws/sumologic/${IMAGE_NAME}:${VERSION}-ubi
+	docker push ${IMAGE_NAME}
