@@ -26,8 +26,10 @@ for IMAGE in ${IMAGES}; do
 
     echo ${IMAGE_NAME}
     if docker pull ${IMAGE_NAME}; then
+        if [[ "${CHECK}" == "true" ]]; then
+            make -C ${NAME} check IMAGE_NAME=${IMAGE_NAME} UPSTREAM_VERSION="${UPSTREAM_VERSION}"
+        fi
         # as image exist, we can go to the next one
-        make -C ${NAME} check IMAGE_NAME=${IMAGE_NAME} UPSTREAM_VERSION="${UPSTREAM_VERSION}"
         continue
     fi
 
