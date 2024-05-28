@@ -1,11 +1,11 @@
 ARG UPSTREAM_VERSION
 
-FROM registry.access.redhat.com/ubi8/ubi-minimal:${UPSTREAM_VERSION}
+FROM registry.access.redhat.com/ubi9/ubi-minimal:${UPSTREAM_VERSION}
 
 ARG UPSTREAM_VERSION
 ARG RELEASE
 
-LABEL name="sumo-ubi8-minimal" \
+LABEL name="sumo-ubi9-minimal" \
       vendor="Sumo Logic" \
       version="${UPSTREAM_VERSION}" \
       release="${RELEASE}" \
