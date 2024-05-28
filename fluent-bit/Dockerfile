@@ -77,7 +77,7 @@ LABEL name="Fluent Bit" \
     io.k8s.description="$DESCRIPTION" \
     maintainer="opensource-collection-team@sumologic.com"
 
-RUN microdnf update && microdnf install -y openssl libpq systemd && microdnf clean all
+RUN microdnf update -y && microdnf install -y openssl libpq systemd && microdnf clean all
 
 COPY --from=builder /fluent-bit /fluent-bit
 COPY --from=builder /tmp/src/LICENSE /licenses/
