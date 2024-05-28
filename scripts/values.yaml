@@ -3,7 +3,7 @@ sumologic:
   accessKey: dummy
   metrics:
     remoteWriteProxy:
-      enabled: true
+      enabled: false
 metrics-server:
   enabled: true
   apiService:
@@ -13,7 +13,7 @@ otelagent:
 telegraf-operator:
   enabled: true
 falco:
-  enabled: true
+  enabled: false
 tailing-sidecar-operator:
   enabled: true
 opentelemetry-operator:
