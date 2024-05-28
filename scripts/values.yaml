@@ -3,7 +3,7 @@ sumologic:
   accessKey: dummy
   metrics:
     remoteWriteProxy:
-      enabled: true
+      enabled: false
 metrics-server:
   enabled: true
   apiService:
