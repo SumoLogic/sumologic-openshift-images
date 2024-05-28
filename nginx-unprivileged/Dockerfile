@@ -1,5 +1,5 @@
 # This file has been build based on the following sources:
-#  - images layers from https://hub.docker.com/layers/nginxinc/nginx-unprivileged/1.26.0-alpine/images/sha256-0904c0562547ece642e3541086bfb63c5cc79a5290f594328a82e7301b4cd451?context=explore
+#  - image layers from https://hub.docker.com/layers/nginxinc/nginx-unprivileged/1.26.0-alpine/images/sha256-0904c0562547ece642e3541086bfb63c5cc79a5290f594328a82e7301b4cd451?context=explore
 #  - installing nginx package from redhat
 ARG UPSTREAM_VERSION
 
