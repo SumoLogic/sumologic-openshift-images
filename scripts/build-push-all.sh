@@ -6,6 +6,7 @@ HELM_CHART_VERSION=v4
 SUMO_REGISTRY="public.ecr.aws/sumologic/"
 PUSH=""
 CHECK="${CHECK:-true}"
+OPERATOR_PROJECT_ID=6075d88c2b962feb86bea730
 
 IMAGES=$(./scripts/list-images.py \
     --fetch-base \
@@ -42,4 +43,9 @@ for IMAGE in ${IMAGES}; do
     if [[ "${CHECK}" == "true" ]]; then
         make -C ${NAME} check IMAGE_NAME=${IMAGE_NAME} UPSTREAM_VERSION="${UPSTREAM_VERSION}"
     fi
+
+    # prepare image to submit
+    CONTAINER_PROJECT_ID="$(curl -sH "X-API-KEY: ${RED_HAT_API_KEY}" "https://catalog.redhat.com/api/containers/v1/product-listings/id/${OPERATOR_PROJECT_ID}/projects/certification" | jq ".data[] | select(.name == \"${NAME}\")._id" --raw-output)"
+    CONTAINER_REGISTRY_KEY="$(curl -sH "X-API-KEY: ${RED_HAT_API_KEY}" "https://catalog.redhat.com/api/containers/v1/projects/certification/id/${CONTAINER_PROJECT_ID}/secrets" | jq ".registry_credentials.password" --raw-output)"
+    SUMOLOGIC_IMAGE=${IMAGE_NAME}
 done
