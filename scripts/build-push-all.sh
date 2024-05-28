@@ -6,7 +6,9 @@ HELM_CHART_VERSION=v4
 SUMO_REGISTRY="public.ecr.aws/sumologic/"
 PUSH=""
 CHECK="${CHECK:-true}"
-OPERATOR_PROJECT_ID=6075d88c2b962feb86bea730
+## Sumo Logic Helm Operator project id
+## rel: https://connect.redhat.com/manage/products/6075d88c2b962feb86bea730/overview
+readonly OPERATOR_PROJECT_ID=6075d88c2b962feb86bea730
 
 IMAGES=$(./scripts/list-images.py \
     --fetch-base \
