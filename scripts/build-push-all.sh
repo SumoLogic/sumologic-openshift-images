@@ -46,8 +46,12 @@ for IMAGE in ${IMAGES}; do
         make -C ${NAME} check IMAGE_NAME=${IMAGE_NAME} UPSTREAM_VERSION="${UPSTREAM_VERSION}"
     fi
 
-    # prepare image to submit
+    ## prepare image to submit
+
+    ## Fetch container project id based on directory(image) name
     CONTAINER_PROJECT_ID="$(curl -sH "X-API-KEY: ${RED_HAT_API_KEY}" "https://catalog.redhat.com/api/containers/v1/product-listings/id/${OPERATOR_PROJECT_ID}/projects/certification" | jq ".data[] | select(.name == \"${NAME}\")._id" --raw-output)"
+    ## Fetch key for image registry
     CONTAINER_REGISTRY_KEY="$(curl -sH "X-API-KEY: ${RED_HAT_API_KEY}" "https://catalog.redhat.com/api/containers/v1/projects/certification/id/${CONTAINER_PROJECT_ID}/secrets" | jq ".registry_credentials.password" --raw-output)"
+    ## Prepate image name
     SUMOLOGIC_IMAGE=${IMAGE_NAME}
 done
