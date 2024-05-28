@@ -113,3 +113,6 @@ list-images-v3:
     	--fetch-base \
     	--values scripts/values.yaml \
     	--version v3
+
+build-all:
+	CHECK=false ./scripts/build-push-all.sh
