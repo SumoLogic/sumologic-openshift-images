@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi8/ubi:8.6
+FROM registry.access.redhat.com/ubi9/ubi:9.4
 
 ADD LICENSE /licenses/
 USER 65532:65532

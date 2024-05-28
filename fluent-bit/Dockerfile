@@ -1,7 +1,6 @@
 ARG UPSTREAM_VERSION
-ARG UBI_IMAGE=registry.access.redhat.com/ubi8/ubi-minimal:8.8
 
-FROM registry.access.redhat.com/ubi8/ubi:8.8 as builder
+FROM registry.access.redhat.com/ubi9/ubi:9.4 as builder
 ARG UPSTREAM_VERSION
 
 ARG BISON_VERSION=3.8.2
@@ -62,7 +61,7 @@ RUN install bin/fluent-bit /fluent-bit/bin/
 RUN cp /tmp/src/conf/*.conf /fluent-bit/etc/
 
 ## Build RedHat compliant image
-FROM ${UBI_IMAGE}
+FROM registry.access.redhat.com/ubi9/ubi-minimal:9.4
 ARG UPSTREAM_VERSION
 ARG RELEASE
 
@@ -78,7 +77,7 @@ LABEL name="Fluent Bit" \
     io.k8s.description="$DESCRIPTION" \
     maintainer="opensource-collection-team@sumologic.com"
 
-RUN microdnf update && microdnf install -y openssl libpq systemd && microdnf clean all
+RUN microdnf update -y && microdnf install -y openssl libpq systemd && microdnf clean all
 
 COPY --from=builder /fluent-bit /fluent-bit
 COPY --from=builder /tmp/src/LICENSE /licenses/

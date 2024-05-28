@@ -8,7 +8,7 @@ ifeq ($(UPSTREAM_VERSION),"")
 endif
 
 ifeq ($(IMAGE_NAME),"")
-        $(error IMAGE_NAME is required)
+        IMAGE_NAME = $(shell basename $(shell pwd))
 endif
 
 build:

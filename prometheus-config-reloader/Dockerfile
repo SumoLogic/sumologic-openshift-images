@@ -1,11 +1,10 @@
 ARG UPSTREAM_VERSION
-ARG UBI_IMAGE=registry.access.redhat.com/ubi8/ubi:8.6
 ## Use original image to copy files from
 ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/v${UPSTREAM_VERSION}/cmd/prometheus-config-reloader/Dockerfile
 FROM public.ecr.aws/sumologic/prometheus-config-reloader:v${UPSTREAM_VERSION} as builder
 
 ## Build RedHat compliant image
-FROM ${UBI_IMAGE}
+FROM registry.access.redhat.com/ubi9/ubi:9.4
 ARG UPSTREAM_VERSION
 ARG RELEASE
 

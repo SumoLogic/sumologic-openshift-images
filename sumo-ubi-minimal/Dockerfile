@@ -1,12 +1,17 @@
-FROM registry.access.redhat.com/ubi8/ubi-minimal:8.4
+ARG UPSTREAM_VERSION
 
-LABEL name="sumo-ubi8-minimal" \
+FROM registry.access.redhat.com/ubi9/ubi-minimal:${UPSTREAM_VERSION}
+
+ARG UPSTREAM_VERSION
+ARG RELEASE
+
+LABEL name="sumo-ubi9-minimal" \
       vendor="Sumo Logic" \
-      version="8.4" \
-      release="1" \
+      version="${UPSTREAM_VERSION}" \
+      release="${RELEASE}" \
       summary="Provides the latest release of the minimal Red Hat Universal Base Image 8 prepared by Sumo Logic." \
       description="The Universal Base Image Minimal is a stripped down image that uses microdnf as a package manager." \
-      maintainer="collection@sumologic.com"
+      maintainer="opensource-collection-team@sumologic.com"
 
 ADD https://www.apache.org/licenses/LICENSE-2.0.txt \
     /licenses/LICENSE

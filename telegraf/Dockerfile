@@ -1,12 +1,11 @@
 ARG UPSTREAM_VERSION
-ARG UBI_IMAGE=registry.access.redhat.com/ubi8/ubi-minimal:8.6
 
 ## Use original image to copy files from
 ## ref: https://github.com/influxdata/influxdata-docker/blob/dd108978ea0e5c0e99ebc745c03973c755702680/telegraf/1.21/Dockerfile
 FROM public.ecr.aws/sumologic/telegraf:${UPSTREAM_VERSION} as builder
 
 ## Build RedHat compliant image
-FROM ${UBI_IMAGE}
+FROM registry.access.redhat.com/ubi9/ubi:9.4
 ARG UPSTREAM_VERSION
 ARG RELEASE
 
