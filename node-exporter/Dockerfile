@@ -1,12 +1,11 @@
 ARG UPSTREAM_VERSION
-ARG UBI_IMAGE=registry.access.redhat.com/ubi8/ubi:8.6
 
 ## Use original image to copy files from
 ## ref: https://github.com/prometheus/node_exporter/blob/v1.3.1/Dockerfile
 FROM public.ecr.aws/sumologic/node-exporter:v${UPSTREAM_VERSION} as builder
 
 ## Build RedHat compliant image
-FROM ${UBI_IMAGE}
+FROM registry.access.redhat.com/ubi9/ubi:9.4
 ARG UPSTREAM_VERSION
 ARG RELEASE
 

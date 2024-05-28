@@ -1,11 +1,10 @@
 ARG UPSTREAM_VERSION
-ARG UBI_IMAGE=registry.access.redhat.com/ubi8/ubi:8.6
 ## Use original image to copy files from
 ## ref: https://github.com/bitnami/bitnami-docker-metrics-server/blob/${UPSTREAM_VERSION}/0/debian-10/Dockerfile
 FROM docker.io/bitnami/metrics-server:${UPSTREAM_VERSION} as builder
 
 ## Build RedHat compliant image
-FROM ${UBI_IMAGE}
+FROM registry.access.redhat.com/ubi9/ubi:9.4
 ARG UPSTREAM_VERSION
 ARG RELEASE
 

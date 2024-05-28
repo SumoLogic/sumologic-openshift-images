@@ -1,12 +1,11 @@
 ARG UPSTREAM_VERSION
-ARG UBI_IMAGE=registry.access.redhat.com/ubi8/ubi:8.6
 
 ## Use original image to copy files from
 ## ref: https://github.com/thanos-io/thanos/blob/v0.25.2/Dockerfile
 FROM public.ecr.aws/sumologic/thanos:v${UPSTREAM_VERSION} as builder
 
 ## Build RedHat compliant image
-FROM ${UBI_IMAGE}
+FROM registry.access.redhat.com/ubi9/ubi:9.4
 ARG UPSTREAM_VERSION
 ARG RELEASE
 
