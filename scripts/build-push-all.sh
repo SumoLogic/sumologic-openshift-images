@@ -61,31 +61,5 @@ for IMAGE in ${IMAGES}; do
     IMAGE_NAME="${SUMO_REGISTRY}${NAME}:${UBI_VERSION}${DEV_SUFFIX}"
     echo "Image: ${IMAGE_NAME}"
 
-    if docker pull ${IMAGE_NAME}; then
-        if [[ "${CHECK}" == "true" ]]; then
-            check
-        fi
-
-        if [[ ${DEV_SUFFIX} != "-dev" ]]; then
-            # as non-dev image exists, we can go to the next one
-            # we may want push dev images once again, e.g. with fixes
-            echo "Image ${IMAGE_NAME} exists, there is no need to push it once again, continue with next image."
-            continue
-        fi
-    fi
-
-    make -C ${NAME} build IMAGE_NAME=${IMAGE_NAME} UPSTREAM_VERSION="${UPSTREAM_VERSION}"
-
-    if [[ "${PUSH}" == "true" ]]; then
-        echo "Pushing image, image: ${IMAGE_NAME}"
-        make -C ${NAME} push IMAGE_NAME=${IMAGE_NAME} UPSTREAM_VERSION="${UPSTREAM_VERSION}"
-    fi
-
-    if [[ "${CHECK}" == "true" ]]; then
-        check
-    fi
-
-    if [[ "${CERTIFY}" == "true" ]]; then
-        submit
-    fi
+    NAME="${NAME}" VERSION="${VERSION}" CHECK="${CHECK}" PUSH="${PUSH}" CERTIFY="${CERTIFY}" ./scripts/build-push.sh
 done

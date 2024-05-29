@@ -14,7 +14,7 @@ build-all:
 	CHECK=false ./scripts/build-push-all.sh
 
 check:
-	PUSH=true CERTIFY=false CHECK=true ./scripts/build-push-all.sh
+	PUSH=true CHECK=true CERTIFY=false ./scripts/build-push-all.sh
 
 certify:
-	PUSH=true CERTIFY=true CHECK=false ./scripts/build-push-all.sh
+	PUSH=true CHECK=true CERTIFY=true ./scripts/build-push-all.sh
