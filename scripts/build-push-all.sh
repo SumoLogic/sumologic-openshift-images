@@ -6,6 +6,27 @@ HELM_CHART_VERSION=v4
 SUMO_REGISTRY="public.ecr.aws/sumologic/"
 PUSH=""
 CHECK="${CHECK:-true}"
+## Sumo Logic Helm Operator project id
+## rel: https://connect.redhat.com/manage/products/6075d88c2b962feb86bea730/overview
+readonly OPERATOR_PROJECT_ID=6075d88c2b962feb86bea730
+
+if [[ -z "${RED_HAT_API_KEY}" && "${CHECK}" == "true" ]]; then
+    echo "RED_HAT_API_KEY is required to perform check"
+    exit -1
+fi
+
+## Perform image check
+function check(){
+    make -C ${NAME} check IMAGE_NAME=${IMAGE_NAME} UPSTREAM_VERSION="${UPSTREAM_VERSION}"
+
+    ## prepare image to submit
+    ## Fetch container project id based on directory(image) name
+    CONTAINER_PROJECT_ID="$(curl -sH "X-API-KEY: ${RED_HAT_API_KEY}" "https://catalog.redhat.com/api/containers/v1/product-listings/id/${OPERATOR_PROJECT_ID}/projects/certification" | jq ".data[] | select(.name == \"${NAME}\")._id" --raw-output)"
+    ## Fetch key for image registry
+    CONTAINER_REGISTRY_KEY="$(curl -sH "X-API-KEY: ${RED_HAT_API_KEY}" "https://catalog.redhat.com/api/containers/v1/projects/certification/id/${CONTAINER_PROJECT_ID}/secrets" | jq ".registry_credentials.password" --raw-output)"
+    ## Prepare image name
+    SUMOLOGIC_IMAGE=${IMAGE_NAME}
+}
 
 IMAGES=$(./scripts/list-images.py \
     --fetch-base \
@@ -27,7 +48,7 @@ for IMAGE in ${IMAGES}; do
     echo ${IMAGE_NAME}
     if docker pull ${IMAGE_NAME}; then
         if [[ "${CHECK}" == "true" ]]; then
-            make -C ${NAME} check IMAGE_NAME=${IMAGE_NAME} UPSTREAM_VERSION="${UPSTREAM_VERSION}"
+            check
         fi
         # as image exist, we can go to the next one
         continue
@@ -40,6 +61,6 @@ for IMAGE in ${IMAGES}; do
     fi
 
     if [[ "${CHECK}" == "true" ]]; then
-        make -C ${NAME} check IMAGE_NAME=${IMAGE_NAME} UPSTREAM_VERSION="${UPSTREAM_VERSION}"
+        check
     fi
 done
