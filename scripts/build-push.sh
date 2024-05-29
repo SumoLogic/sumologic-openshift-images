@@ -98,7 +98,7 @@ readonly IMAGE_NAME="${SUMO_REGISTRY}${NAME}:${UBI_VERSION}${DEV_SUFFIX}"
 echo "Image: ${IMAGE_NAME}"
 
 if docker pull "${IMAGE_NAME}" && [[ "${FORCE}" == "false" ]]; then
-    echo "Image ${IMAGE_NAME} exists, there is no need to push it once again, continue with next image." 2>&1
+    echo "Image ${IMAGE_NAME} exists, there is no need to push it once again." 2>&1
     exit 0
 fi
 
