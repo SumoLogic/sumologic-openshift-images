@@ -32,9 +32,7 @@ for IMAGE in ${IMAGES}; do
     NAME="${IMAGE%%:*}"
     NAME="${NAME##*/}"
 
-   PYAXIS_API_TOKEN="${PYAXIS_API_TOKEN=}" \
    NAME="${NAME}" \
-   ACTION="${ACTION}" \
    VERSION="${VERSION}" \
    ./scripts/build-push.sh
 done
