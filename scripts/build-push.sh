@@ -39,6 +39,7 @@ function submit(){
     CONTAINER_REGISTRY_KEY=${CONTAINER_REGISTRY_KEY} \
     AUTH_CONTENT=${DOCKER_CONFIG_JSON} \
     SUMOLOGIC_IMAGE=${IMAGE_NAME} \
+    PYAXIS_API_TOKEN=${PYAXIS_API_TOKEN} \
     ./scripts/submit_image.sh
 }
 
