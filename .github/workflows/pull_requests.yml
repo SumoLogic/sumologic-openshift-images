@@ -8,6 +8,8 @@ on:
 jobs:
   build-all:
     runs-on: ubuntu-22.04
+    env:
+      CHECK: "false"
     steps:
       - uses: actions/checkout@v4
       - name: Build all
