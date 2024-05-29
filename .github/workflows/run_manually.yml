@@ -1,9 +1,6 @@
 name: Manual test run
 
 on:
-  pull_request:
-    branches:
-      - main
   workflow_dispatch:
     inputs:
       push:
@@ -24,6 +21,12 @@ on:
         options:
           - "true"
           - "false"
+      force:
+        type: choice
+        description: Perform action even if image already exists
+        options:
+          - "false"
+          - "true"
       name:
         description: Image name
         required: true
@@ -41,14 +44,12 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     env:
-      # PUSH: "${{ inputs.push }} "
-      # CHECK: "${{ inputs.check }} "
-      # CERTIFY: "${{ inputs.certify }} "
-      PUSH: "true"
-      CHECK: "true"
-      CERTIFY: "true"
-      NAME: "opentelemetry-operator"
-      VERSION: "0.95.0"
+      PUSH: "${{ inputs.push }} "
+      CHECK: "${{ inputs.check }} "
+      CERTIFY: "${{ inputs.certify }} "
+      FORCE: "${{ inputs.force }} "
+      NAME: "${{ inputs.NAME }} "
+      VERSION: "${{ inputs.VERSION }} "
       PYAXIS_API_TOKEN: ${{ secrets.RED_HAT_API_KEY }}
     steps:
       - uses: actions/checkout@v4
@@ -64,5 +65,6 @@ jobs:
           VERSION="${VERSION}" \
           CHECK="${CHECK}" \
           PUSH="${PUSH}" \
+          FORCE="${FORCE}" \
           CERTIFY="${CERTIFY}" \
           ./scripts/build-push.sh

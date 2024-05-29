@@ -2,6 +2,7 @@ VERSION_PREFIX ?= ""
 UPSTREAM_VERSION ?= ""
 VERSION := "${VERSION_PREFIX}${UPSTREAM_VERSION}"
 IMAGE_NAME ?= ""
+PLATFORM ?= "amd64"
 
 ifeq ($(UPSTREAM_VERSION),"")
         $(error UPSTREAM_VERSION is required)
@@ -16,7 +17,7 @@ build:
 	docker build . -t ${IMAGE_NAME} --build-arg UPSTREAM_VERSION=${UPSTREAM_VERSION} --build-arg RELEASE=$${RELEASE}
 
 check:
-	preflight check container ${IMAGE_NAME}
+	preflight check container ${IMAGE_NAME} --platform=${PLATFORM}
 
 push:
 	docker push ${IMAGE_NAME}

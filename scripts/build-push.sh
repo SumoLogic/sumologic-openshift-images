@@ -10,17 +10,18 @@ function usage() {
 
 PYAXIS_API_TOKEN    token for Red Hat API
 NAME                image to build, for example 'opentelemetry-operator'
-VERSION             version to build from (without prefix), for example '0.95.0', even if the build is from 'v0.95.0'
+VERSION             version to build from (without prefix), for example 'v0.95.0'
 PUSH                set to 'true' to push image. Default is 'false'
 CHECK               set to 'true' to perform preflight check on the image. Default is 'false', requires 'PUSH=true'
 CERTIFY             set to 'true' to certify image. If 'false', it will use '-dev' suffix for image tag. Default is 'false', requires 'CHECK=true'
-FORCE               set to 'true' to perform action if image already exist in repository. Default is 'false'"
+FORCE               set to 'true' to perform action if image already exist in repository. Default is 'false'
+PLATFORM            platform to test. Default is 'amd64'"
 }
 
 ## Perform image check
 function check(){
     echo "Checking image, image: ${IMAGE_NAME}"
-    make -C "${NAME}" check IMAGE_NAME="${IMAGE_NAME}" UPSTREAM_VERSION="${VERSION}"
+    make -C "${NAME}" check PLATFORM="${PLATFORM}" IMAGE_NAME="${IMAGE_NAME}" UPSTREAM_VERSION="${VERSION}"
 }
 
 ## Perform image submit for certification
@@ -30,9 +31,11 @@ function submit(){
     CONTAINER_PROJECT_ID="$(curl -sH "X-API-KEY: ${PYAXIS_API_TOKEN}" "https://catalog.redhat.com/api/containers/v1/product-listings/id/${OPERATOR_PROJECT_ID}/projects/certification" | jq ".data[] | select(.name == \"${NAME}\")._id" --raw-output)"
     ## Fetch key for image registry
     CONTAINER_REGISTRY_KEY="$(curl -sH "X-API-KEY: ${PYAXIS_API_TOKEN}" "https://catalog.redhat.com/api/containers/v1/projects/certification/id/${CONTAINER_PROJECT_ID}/secrets" | jq ".registry_credentials.password" --raw-output)"
+    DOCKER_CONFIG_JSON="$(curl -sH "X-API-KEY: ${PYAXIS_API_TOKEN}" "https://catalog.redhat.com/api/containers/v1/projects/certification/id/${CONTAINER_PROJECT_ID}/secrets" | jq ".docker_config_json" --raw-output)"
 
     CONTAINER_PROJECT_ID=${CONTAINER_PROJECT_ID} \
     CONTAINER_REGISTRY_KEY=${CONTAINER_REGISTRY_KEY} \
+    AUTH_CONTENT=${DOCKER_CONFIG_JSON} \
     SUMOLOGIC_IMAGE=${IMAGE_NAME} \
     ./scripts/submit_image.sh
 }
@@ -47,7 +50,12 @@ readonly PUSH="${PUSH:-false}"
 readonly CERTIFY="${CERTIFY:-false}"
 readonly FORCE="${FORCE:-false}"
 readonly PYAXIS_API_TOKEN="${PYAXIS_API_TOKEN}"
+readonly PLATFORM="${PLATFORM:-amd64}"
 DEV_SUFFIX=""
+
+## Sumo Logic Helm Operator project id
+## rel: https://connect.redhat.com/manage/products/6075d88c2b962feb86bea730/overview
+readonly OPERATOR_PROJECT_ID=6075d88c2b962feb86bea730
 
 if [[ -z "${NAME}" ]]; then
     echo 'Missing NAME variable' 2>&1

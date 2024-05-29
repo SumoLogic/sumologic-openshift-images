@@ -9,6 +9,9 @@ then
     exit 1
 fi
 
+AUTH_CONTENT="${AUTH_CONTENT}"
+readonly PLATFORM="${PLATFORM:-amd64}"
+
 echo "${CONTAINER_REGISTRY_KEY}" | docker login -u "redhat-isv-containers+${CONTAINER_PROJECT_ID}-robot" quay.io --password-stdin
 
 # extract tag
@@ -19,8 +22,10 @@ docker tag ${SUMOLOGIC_IMAGE} "quay.io/redhat-isv-containers/${CONTAINER_PROJECT
 docker push "quay.io/redhat-isv-containers/${CONTAINER_PROJECT_ID}:${TAG}"
 
 # prepare temporary auth file
-AUTH_KEY=$(echo -n  "redhat-isv-containers+${CONTAINER_PROJECT_ID}-robot:${CONTAINER_REGISTRY_KEY}" | base64 --wrap 0)
-AUTH_CONTENT="{\"auths\": {\"quay.io\": {\"auth\": \"${AUTH_KEY}\"}}}"
+if [[ -z "${AUTH_CONTENT}" ]]; then
+    AUTH_KEY=$(echo -n  "redhat-isv-containers+${CONTAINER_PROJECT_ID}-robot:${CONTAINER_REGISTRY_KEY}" | base64 --wrap 0)
+    AUTH_CONTENT="{\"auths\": {\"quay.io\": {\"auth\": \"${AUTH_KEY}\"}}}"
+fi
 echo ${AUTH_CONTENT} > temp_auth.json
 
 # submit image
@@ -28,7 +33,8 @@ preflight check container "quay.io/redhat-isv-containers/${CONTAINER_PROJECT_ID}
 --submit \
 --pyxis-api-token="${PYAXIS_API_TOKEN}" \
 --certification-project-id="${CONTAINER_PROJECT_ID}" \
---docker-config=temp_auth.json
+--docker-config=temp_auth.json \
+--platform="${PLATFORM}"
 
 # add latest tag
 docker tag  ${SUMOLOGIC_IMAGE} "quay.io/redhat-isv-containers/${CONTAINER_PROJECT_ID}:latest"
