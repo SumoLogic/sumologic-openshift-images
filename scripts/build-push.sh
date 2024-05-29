@@ -28,9 +28,15 @@ function check(){
 
 ## Perform image submit for certification
 function submit(){
-    echo "Submitting image for cerification, image: ${IMAGE_NAME}"
+    echo "Submitting image for certification, image: ${IMAGE_NAME}"
     ## Fetch container project id based on directory(image) name
     CONTAINER_PROJECT_ID="$(curl -sH "X-API-KEY: ${PYAXIS_API_TOKEN}" "https://catalog.redhat.com/api/containers/v1/product-listings/id/${OPERATOR_PROJECT_ID}/projects/certification" | jq ".data[] | select(.name == \"${NAME}\")._id" --raw-output)"
+
+    if [[ -z ${CONTAINER_PROJECT_ID} ]]; then
+        echo "Missing project for ${IMAGE_NAME}"
+        exit 1
+    fi
+
     ## Fetch key for image registry
     CONTAINER_REGISTRY_KEY="$(curl -sH "X-API-KEY: ${PYAXIS_API_TOKEN}" "https://catalog.redhat.com/api/containers/v1/projects/certification/id/${CONTAINER_PROJECT_ID}/secrets" | jq ".registry_credentials.password" --raw-output)"
     DOCKER_CONFIG_JSON="$(curl -sH "X-API-KEY: ${PYAXIS_API_TOKEN}" "https://catalog.redhat.com/api/containers/v1/projects/certification/id/${CONTAINER_PROJECT_ID}/secrets" | jq ".docker_config_json" --raw-output)"
@@ -39,7 +45,6 @@ function submit(){
     CONTAINER_REGISTRY_KEY=${CONTAINER_REGISTRY_KEY} \
     AUTH_CONTENT=${DOCKER_CONFIG_JSON} \
     SUMOLOGIC_IMAGE=${IMAGE_NAME} \
-    PYAXIS_API_TOKEN=${PYAXIS_API_TOKEN} \
     ./scripts/submit_image.sh
 }
 
