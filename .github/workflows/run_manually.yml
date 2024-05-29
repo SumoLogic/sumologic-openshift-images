@@ -3,24 +3,14 @@ name: Manual test run
 on:
   workflow_dispatch:
     inputs:
-      push:
+      action:
         type: choice
-        description: Push the image to repository
+        description: Action to perform
         options:
-          - "true"
-          - "false"
-      check:
-        type: choice
-        description: Check the image using preflight
-        options:
-          - "true"
-          - "false"
-      certify:
-        type: choice
-        description: Certify the image
-        options:
-          - "true"
-          - "false"
+          - "build"
+          - "push"
+          - "check"
+          - "certify"
       force:
         type: choice
         description: Perform action even if image already exists
@@ -44,9 +34,7 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     env:
-      PUSH: "${{ inputs.push }}"
-      CHECK: "${{ inputs.check }}"
-      CERTIFY: "${{ inputs.certify }}"
+      ACTION: "${{ inputs.action }}"
       FORCE: "${{ inputs.force }}"
       NAME: "${{ inputs.NAME }}"
       VERSION: "${{ inputs.VERSION }}"
@@ -66,10 +54,8 @@ jobs:
       - name: Build push
         run: |
           PYAXIS_API_TOKEN="${PYAXIS_API_TOKEN=}" \
+          ACTION="${ACTION}"
           NAME="${NAME}" \
           VERSION="${VERSION}" \
-          CHECK="${CHECK}" \
-          PUSH="${PUSH}" \
           FORCE="${FORCE}" \
-          CERTIFY="${CERTIFY}" \
           ./scripts/build-push.sh
