@@ -54,7 +54,7 @@ jobs:
       - name: Build push
         run: |
           PYAXIS_API_TOKEN="${PYAXIS_API_TOKEN=}" \
-          ACTION="${ACTION}"
+          ACTION="${ACTION}" \
           NAME="${NAME}" \
           VERSION="${VERSION}" \
           FORCE="${FORCE}" \
