@@ -13,13 +13,13 @@ list-images-v3:
     	--version v3
 
 build-all:
-	CHECK=false ./scripts/build-push-all.sh
+	ACTION=build ./scripts/build-push-all.sh
 
 check:
-	PUSH=true CHECK=true CERTIFY=false ./scripts/build-push-all.sh
+	ACTION=check ./scripts/build-push-all.sh
 
 certify:
-	PUSH=true CHECK=true CERTIFY=true ./scripts/build-push-all.sh
+	ACTION=certify ./scripts/build-push-all.sh
 
 _login:
 	aws ecr-public get-login-password --region us-east-1 \

@@ -2,16 +2,21 @@
 
 set -e
 
-HELM_CHART_VERSION=v4
-SUMO_REGISTRY="public.ecr.aws/sumologic/"
-CHECK="${CHECK:-true}"
-CERTIFY="${CERTIFY:-false}"
-PUSH="${PUSH:-false}"
+readonly HELM_CHART_VERSION=v4
+readonly ACTION_BUILD="build"
+readonly ACTION_PUSH="push"
+readonly ACTION_CHECK="check"
+readonly ACTION_CERTIFY="certify"
+readonly ACTION="${ACTION:-${ACTION_BUILD}}"
 
+if ! [[ "$ACTION" =~ ${ACTION_BUILD}|${ACTION_PUSH}|${ACTION_CHECK}|${ACTION_CERTIFY} ]]; then
+    echo "ACTION should be '${ACTION_BUILD}', '${ACTION_PUSH}', '${ACTION_CHECK}' or ${ACTION_CERTIFY}"
+    exit 1
+fi
 
-if [[ -z "${PYAXIS_API_TOKEN}" && "${CHECK}" == "true" ]]; then
-    echo "PYAXIS_API_TOKEN is required to perform check"
-    exit -1
+if [[ -z "${PYAXIS_API_TOKEN}" && ( "${ACTION}" =~ ${ACTION_CHECK}|${ACTION_CERTIFY} ) ]]; then
+    echo "PYAXIS_API_TOKEN is required to perform check" 2>&1
+    exit 1
 fi
 
 IMAGES=$(./scripts/list-images.py \
@@ -23,25 +28,13 @@ IMAGES=$(./scripts/list-images.py \
 for IMAGE in ${IMAGES}; do
     # Treat everything after `:` as version
     VERSION="${IMAGE##*:}"
-    # Strip v from version
-    UPSTREAM_VERSION="${VERSION##[v]}"
     # get name as string between `/` and `:`
     NAME="${IMAGE%%:*}"
     NAME="${NAME##*/}"
-    UBI_VERSION="${VERSION}-ubi"
-
-    if [[ "${CERTIFY}" == "false" ]]; then
-        DEV_SUFFIX="-dev"
-    fi
-
-    IMAGE_NAME="${SUMO_REGISTRY}${NAME}:${UBI_VERSION}${DEV_SUFFIX}"
-    echo "Image: ${IMAGE_NAME}"
 
    PYAXIS_API_TOKEN="${PYAXIS_API_TOKEN=}" \
    NAME="${NAME}" \
+   ACTION="${ACTION}" \
    VERSION="${VERSION}" \
-   CHECK="${CHECK}" \
-   PUSH="${PUSH}" \
-   CERTIFY="${CERTIFY}" \
    ./scripts/build-push.sh
 done
