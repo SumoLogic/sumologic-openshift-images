@@ -81,7 +81,7 @@ if [[ -z "${VERSION}" ]]; then
     exit 1
 fi
 
-if [[ -z "${PYAXIS_API_TOKEN}" && "${ACTION}" =~ ${ACTION_PUSH}|${ACTION_CHECK}|${ACTION_CERTIFY} ]]; then
+if [[ -z "${PYAXIS_API_TOKEN}" && "${ACTION}" =~ ${ACTION_CHECK}|${ACTION_CERTIFY} ]]; then
     echo 'Missing PYAXIS_API_TOKEN variable' 2>&1
     usage
     exit 1
