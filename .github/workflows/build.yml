@@ -1,9 +1,9 @@
-name: PRs checks
+name: Build images
 
 on:
-  pull_request:
-    branches:
-      - main
+  # run this job every Monday at 9 am UTC
+  schedule:
+    - cron: "0 9 * * 1"
 
 jobs:
   build-all:
