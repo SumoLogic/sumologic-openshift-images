@@ -3,7 +3,7 @@ name: Manual test run
 on:
   workflow_dispatch:
     inputs:
-      push:
+      action:
         type: choice
         description: Action to perform
         options:
