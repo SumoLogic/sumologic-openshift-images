@@ -1,0 +1,75 @@
+name: Manual test run
+
+on:
+  workflow_dispatch:
+    inputs:
+      push:
+        type: choice
+        description: Push the image to repository
+        options:
+          - "true"
+          - "false"
+      check:
+        type: choice
+        description: Check the image using preflight
+        options:
+          - "true"
+          - "false"
+      certify:
+        type: choice
+        description: Certify the image
+        options:
+          - "true"
+          - "false"
+      force:
+        type: choice
+        description: Perform action even if image already exists
+        options:
+          - "false"
+          - "true"
+      name:
+        description: Image name
+        required: true
+        type: string
+      version:
+        description: Image version
+        required: true
+        type: string
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    env:
+      PUSH: "${{ inputs.push }}"
+      CHECK: "${{ inputs.check }}"
+      CERTIFY: "${{ inputs.certify }}"
+      FORCE: "${{ inputs.force }}"
+      NAME: "${{ inputs.NAME }}"
+      VERSION: "${{ inputs.VERSION }}"
+      PYAXIS_API_TOKEN: ${{ secrets.RED_HAT_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Login to Open Source ECR
+        run: make login
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Get preflight
+        run: |
+          curl -LO https://github.com/redhat-openshift-ecosystem/openshift-preflight/releases/latest/download/preflight-linux-amd64
+          chmod +x preflight-linux-amd64
+          mv preflight-linux-amd64 /usr/local/bin/preflight
+      - name: Build push
+        run: |
+          PYAXIS_API_TOKEN="${PYAXIS_API_TOKEN=}" \
+          NAME="${NAME}" \
+          VERSION="${VERSION}" \
+          CHECK="${CHECK}" \
+          PUSH="${PUSH}" \
+          FORCE="${FORCE}" \
+          CERTIFY="${CERTIFY}" \
+          ./scripts/build-push.sh

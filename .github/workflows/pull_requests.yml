@@ -9,7 +9,8 @@ jobs:
   build-all:
     runs-on: ubuntu-22.04
     env:
-      CHECK: "false"
+      CHECK: "true"
+      PYAXIS_API_TOKEN: ${{ secrets.RED_HAT_API_KEY }}
     steps:
       - uses: actions/checkout@v4
       - name: Build all
