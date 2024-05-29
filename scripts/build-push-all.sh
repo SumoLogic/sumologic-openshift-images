@@ -61,5 +61,11 @@ for IMAGE in ${IMAGES}; do
     IMAGE_NAME="${SUMO_REGISTRY}${NAME}:${UBI_VERSION}${DEV_SUFFIX}"
     echo "Image: ${IMAGE_NAME}"
 
-    NAME="${NAME}" VERSION="${VERSION}" CHECK="${CHECK}" PUSH="${PUSH}" CERTIFY="${CERTIFY}" ./scripts/build-push.sh
+   PYAXIS_API_TOKEN="${PYAXIS_API_TOKEN=}" \
+   NAME="${NAME}" \
+   VERSION="${VERSION}" \
+   CHECK="${CHECK}" \
+   PUSH="${PUSH}" \
+   CERTIFY="${CERTIFY}" \
+   ./scripts/build-push.sh
 done

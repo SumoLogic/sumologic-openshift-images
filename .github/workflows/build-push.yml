@@ -1,0 +1,68 @@
+name: Manual test run
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      push:
+        type: choice
+        description: Push the image to repository
+        options:
+          - "true"
+          - "false"
+      check:
+        type: choice
+        description: Check the image using preflight
+        options:
+          - "true"
+          - "false"
+      certify:
+        type: choice
+        description: Certify the image
+        options:
+          - "true"
+          - "false"
+      name:
+        description: Image name
+        required: true
+        type: string
+      version:
+        description: Image version
+        required: true
+        type: string
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    env:
+      # PUSH: "${{ inputs.push }} "
+      # CHECK: "${{ inputs.check }} "
+      # CERTIFY: "${{ inputs.certify }} "
+      PUSH: "true"
+      CHECK: "true"
+      CERTIFY: "true"
+      NAME: "opentelemetry-operator"
+      VERSION: "0.95.0"
+      PYAXIS_API_TOKEN: ${{ secrets.RED_HAT_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Login to Open Source ECR
+        run: make login
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_DEV }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEV }}
+      - name: Build push
+        run: |
+          PYAXIS_API_TOKEN="${PYAXIS_API_TOKEN=}" \
+          NAME="${NAME}" \
+          VERSION="${VERSION}" \
+          CHECK="${CHECK}" \
+          PUSH="${PUSH}" \
+          CERTIFY="${CERTIFY}" \
+          ./scripts/build-push.sh
