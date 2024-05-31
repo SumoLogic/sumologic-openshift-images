@@ -29,7 +29,7 @@ fi
 echo ${AUTH_CONTENT} > temp_auth.json
 
 # submit image
-preflight check container "quay.io/redhat-isv-containers/${CONTAINER_PROJECT_ID}:${TAG}" \
+${BIN}preflight check container "quay.io/redhat-isv-containers/${CONTAINER_PROJECT_ID}:${TAG}" \
 --submit \
 --pyxis-api-token="${PYAXIS_API_TOKEN}" \
 --certification-project-id="${CONTAINER_PROJECT_ID}" \

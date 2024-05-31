@@ -8,7 +8,7 @@ IMAGES=$(./scripts/list-images.py \
     --fetch-base \
     --values scripts/values.yaml \
     --version "${HELM_CHART_VERSION}" \
-    | grep -vE '\/(sumologic-otel-collector|kubernetes-setup|kubernetes-tools-kubectl|tailing-sidecar-operator|tailing-sidecar):' )
+    2> /dev/null | grep -vE '\/(sumologic-otel-collector|kubernetes-setup|kubernetes-tools-kubectl|tailing-sidecar-operator|tailing-sidecar):')
 
 for IMAGE in ${IMAGES}; do
   # Treat everything after `:` as version

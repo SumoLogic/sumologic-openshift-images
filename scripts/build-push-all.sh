@@ -8,6 +8,7 @@ readonly ACTION_PUSH="push"
 readonly ACTION_CHECK="check"
 readonly ACTION_CERTIFY="certify"
 readonly ACTION="${ACTION:-${ACTION_BUILD}}"
+readonly BIN="./bin/"
 
 if ! [[ "$ACTION" =~ ${ACTION_BUILD}|${ACTION_PUSH}|${ACTION_CHECK}|${ACTION_CERTIFY} ]]; then
     echo "ACTION should be '${ACTION_BUILD}', '${ACTION_PUSH}', '${ACTION_CHECK}' or ${ACTION_CERTIFY}"
