@@ -47,10 +47,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - name: Get preflight
-        run: |
-          curl -LO https://github.com/redhat-openshift-ecosystem/openshift-preflight/releases/latest/download/preflight-linux-amd64
-          chmod +x preflight-linux-amd64
-          mv preflight-linux-amd64 /usr/local/bin/preflight
+        run: make install_preflight
       - name: Build push
         run: |
           PYAXIS_API_TOKEN="${PYAXIS_API_TOKEN=}" \

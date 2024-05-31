@@ -1,0 +1,25 @@
+name: Manually check all container images
+
+on:
+  workflow_dispatch:
+ 
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Login to Open Source ECR
+        run: make login
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Get preflight
+        run: make install_preflight
+      - name: Check all container images
+        run: make check FORCE=true
+        env:
+          PYAXIS_API_TOKEN: ${{ secrets.RED_HAT_API_KEY }}
