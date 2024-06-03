@@ -9,10 +9,10 @@ FROM registry.access.redhat.com/ubi9/ubi:9.4
 ARG UPSTREAM_VERSION
 ARG RELEASE
 
-ENV SUMMARY="UBI based telegraf-operator" \
+ENV SUMMARY="UBI based Telegraf Operator image" \
     DESCRIPTION="The telegraf facilitates management of telegraf CRDs in Kubernetes."
 
-LABEL name="telegraf-operator" \
+LABEL name="Telegraf Operator" \
     vendor="Sumo Logic" \
     version="${UPSTREAM_VERSION}" \
     release="${RELEASE}" \

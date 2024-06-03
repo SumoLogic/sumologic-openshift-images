@@ -9,7 +9,7 @@ FROM registry.access.redhat.com/ubi9/ubi:9.4
 ARG UPSTREAM_VERSION
 ARG RELEASE
 
-ENV SUMMARY="UBI based thanos" \
+ENV SUMMARY="UBI based Thanos image" \
     DESCRIPTION="Thanos is a set of components that can be composed into a highly available metric system with unlimited storage capacity, which can be added seamlessly on top of existing Prometheus deployments."
 
 LABEL name="Thanos" \

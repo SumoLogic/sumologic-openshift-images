@@ -9,10 +9,10 @@ FROM registry.access.redhat.com/ubi9/ubi:9.4
 ARG UPSTREAM_VERSION
 ARG RELEASE
 
-ENV SUMMARY="UBI based prometheus-operator" \
+ENV SUMMARY="UBI based Prometheus Operator image" \
     DESCRIPTION="The Prometheus Operator provides Kubernetes native deployment and management of Prometheus and related monitoring components."
 
-LABEL name="Prometheus-operator" \
+LABEL name="Prometheus Operator" \
     vendor="Sumo Logic" \
     version="${UPSTREAM_VERSION}" \
     release="${RELEASE}" \

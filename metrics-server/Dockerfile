@@ -10,10 +10,10 @@ ARG RELEASE
 
 COPY --from=builder /opt/bitnami /opt/bitnami
 
-ENV SUMMARY="UBI based metrics-server" \
+ENV SUMMARY="UBI based Metrics Server image" \
     DESCRIPTION="Metrics Server is a cluster-wide aggregator of resource usage data. Metrics Server collects metrics from the Summary API, exposed by Kubelet on each node."
 
-LABEL name="metrics-server" \
+LABEL name="Metrics Server" \
     vendor="Sumo Logic" \
     version="${UPSTREAM_VERSION}" \
     release="${RELEASE}" \

@@ -12,8 +12,8 @@ ARG RELEASE
 ARG NGINX_UID=999
 ARG NGINX_GID=999
 
-ENV SUMMARY="UBI based Unprivileged NGINX" \
-    DESCRIPTION="nginx is an HTTP and reverse proxy server, a mail proxy server, and a generic TCP/UDP proxy server"
+ENV SUMMARY="UBI based Unprivileged NGINX image" \
+    DESCRIPTION="NGINX is an HTTP and reverse proxy server, a mail proxy server, and a generic TCP/UDP proxy server"
 
 LABEL name="Unprivileged NGINX" \
     vendor="Sumo Logic" \

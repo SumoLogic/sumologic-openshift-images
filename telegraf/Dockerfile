@@ -9,10 +9,10 @@ FROM registry.access.redhat.com/ubi9/ubi:9.4
 ARG UPSTREAM_VERSION
 ARG RELEASE
 
-ENV SUMMARY="UBI based telegraf" \
+ENV SUMMARY="UBI based Telegraf image" \
     DESCRIPTION="Telegraf is an agent for collecting metrics and writing them to InfluxDB or other outputs."
 
-LABEL name="telegraf" \
+LABEL name="Telegraf" \
     vendor="Sumo Logic" \
     version="${UPSTREAM_VERSION}" \
     release="${RELEASE}" \

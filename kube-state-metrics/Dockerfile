@@ -9,10 +9,10 @@ FROM registry.access.redhat.com/ubi9/ubi:9.4
 ARG UPSTREAM_VERSION
 ARG RELEASE
 
-ENV SUMMARY="UBI based kube-state-metrics" \
+ENV SUMMARY="UBI based Kube State Metrics image" \
     DESCRIPTION="kube-state-metrics is a simple service that listens to the Kubernetes API server and generates metrics about the state of the objects."
 
-LABEL name="Kube-state-metrics" \
+LABEL name="Kube State Metrics" \
     vendor="Sumo Logic" \
     version="${UPSTREAM_VERSION}" \
     release="${RELEASE}" \

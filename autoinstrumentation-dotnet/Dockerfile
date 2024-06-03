@@ -9,12 +9,12 @@ FROM registry.access.redhat.com/ubi9/ubi:9.4
 ARG UPSTREAM_VERSION
 ARG RELEASE
 
-LABEL name="Autoinstrumentation-dotnet" \
+LABEL name="OpenTelemetry .NET Automatic Instrumentation" \
     vendor="Sumo Logic" \
     version="${UPSTREAM_VERSION}" \
     release="${RELEASE}" \
-    summary="UBI based OpenTelemetry .NET Automatic Instrumentation " \
-    description="Kubernetes Operator for OpenTelemetry Collector" \
+    summary="UBI based OpenTelemetry .NET Automatic Instrumentation image" \
+    description="OpenTelemetry .NET Automatic Instrumentation adds instrumentation to .NET applications without having to modify their source code." \
     maintainer="opensource-collection-team@sumologic.com"
 
 ADD https://raw.githubusercontent.com/open-telemetry/opentelemetry-dotnet-instrumentation/v${UPSTREAM_VERSION}/LICENSE \

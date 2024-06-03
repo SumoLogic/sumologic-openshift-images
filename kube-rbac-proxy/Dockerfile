@@ -8,10 +8,10 @@ FROM registry.access.redhat.com/ubi9/ubi:9.4
 ARG UPSTREAM_VERSION
 ARG RELEASE
 
-ENV SUMMARY="UBI based kube-rbac-proxy" \
+ENV SUMMARY="UBI based Kube RBAC Proxy image" \
     DESCRIPTION="The kube-rbac-proxy is a small HTTP proxy for a single upstream, that can perform RBAC authorization against the Kubernetes API using SubjectAccessReview."
 
-LABEL name="Kube-rbac-proxy" \
+LABEL name="Kube RBAC Proxy" \
     vendor="Sumo Logic" \
     version="$UPSTREAM_VERSION" \
     release="$RELEASE" \

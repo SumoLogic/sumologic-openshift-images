@@ -8,10 +8,10 @@ FROM registry.access.redhat.com/ubi9/ubi:9.4
 ARG UPSTREAM_VERSION
 ARG RELEASE
 
-ENV  SUMMARY="UBI based prometheus-config-reloader" \
-    DESCRIPTION="Prometheus configuration reloader"
+ENV  SUMMARY="UBI based Prometheus Configuration Reloader image" \
+    DESCRIPTION="Prometheus Configuration Reloader automatically reloads Prometheus Configuration"
 
-LABEL name="Prometheus-config-reloader" \
+LABEL name="Prometheus Configuration Reloader" \
     vendor="Sumo Logic" \
     version="${UPSTREAM_VERSION}" \
     release="${RELEASE}" \

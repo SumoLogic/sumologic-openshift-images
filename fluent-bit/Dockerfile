@@ -65,7 +65,7 @@ FROM registry.access.redhat.com/ubi9/ubi-minimal:9.4
 ARG UPSTREAM_VERSION
 ARG RELEASE
 
-ENV SUMMARY="UBI based Fluent Bit" \
+ENV SUMMARY="UBI based Fluent Bit image" \
     DESCRIPTION="Fluent Bit is a fast Log Processor and Forwarder"
 
 LABEL name="Fluent Bit" \

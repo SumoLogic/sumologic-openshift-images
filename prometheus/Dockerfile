@@ -10,7 +10,7 @@ FROM registry.access.redhat.com/ubi9/ubi:9.4
 ARG UPSTREAM_VERSION
 ARG RELEASE
 
-ENV SUMMARY="UBI based prometheus" \
+ENV SUMMARY="UBI based Prometheus image" \
     DESCRIPTION="Prometheus, a Cloud Native Computing Foundation project, is a systems and service monitoring system."
 
 LABEL name="Prometheus" \
