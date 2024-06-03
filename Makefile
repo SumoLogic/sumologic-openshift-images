@@ -1,4 +1,5 @@
 OPENSOURCE_ECR_URL = public.ecr.aws/sumologic
+BIN="$(abspath $(CURDIR)/bin)/"
 
 list-images-v4:
 	./scripts/list-images.py \
@@ -37,3 +38,9 @@ _login:
 login:
 	$(MAKE) _login \
 		ECR_URL="$(OPENSOURCE_ECR_URL)"
+
+check:
+	${BIN}preflight check container ${IMAGE_NAME} --platform=${PLATFORM}
+
+push:
+	docker push ${IMAGE_NAME}
