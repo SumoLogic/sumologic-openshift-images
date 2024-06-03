@@ -42,7 +42,7 @@ RUN sed -i 's,listen       80;,listen       8080;,' /etc/nginx/nginx.conf \
 COPY --from=builder docker-entrypoint.sh /
 COPY --from=builder /docker-entrypoint.d /docker-entrypoint.d
 ADD https://raw.githubusercontent.com/nginxinc/docker-nginx-unprivileged/main/LICENSE \
-    /licenses
+    /licenses/LICENSE
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 EXPOSE 8080
