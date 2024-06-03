@@ -12,10 +12,10 @@ ARG RELEASE
 WORKDIR /
 COPY --from=builder  /manager .
 
-ENV SUMMARY="UBI based opentelemetry operator" \
+ENV SUMMARY="UBI based OpenTelemetry Operator image" \
     DESCRIPTION="OpenTelemetry Operator manages OpenTelemetry Collector and auto-instrumentation of the workloads using OpenTelemetry instrumentation libraries"
 
-LABEL name="opentelemetry-operator" \
+LABEL name="OpenTelemetry Operator" \
     vendor="Sumo Logic" \
     version="${UPSTREAM_VERSION}" \
     release="${RELEASE}" \

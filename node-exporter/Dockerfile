@@ -9,10 +9,10 @@ FROM registry.access.redhat.com/ubi9/ubi:9.4
 ARG UPSTREAM_VERSION
 ARG RELEASE
 
-ENV SUMMARY="UBI based node-exporter" \
+ENV SUMMARY="UBI based Prometheus Node Exporter image" \
     DESCRIPTION="Prometheus exporter for hardware and OS metrics exposed by *NIX kernels, written in Go with pluggable metric collectors."
 
-LABEL name="Node-exporter" \
+LABEL name="Prometheus Node Exporter" \
       vendor="Sumo Logic" \
       version="${UPSTREAM_VERSION}" \
       release="${RELEASE}" \

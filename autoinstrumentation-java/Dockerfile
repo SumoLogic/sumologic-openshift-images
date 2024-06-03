@@ -9,12 +9,12 @@ FROM registry.access.redhat.com/ubi9/ubi:9.4
 ARG UPSTREAM_VERSION
 ARG RELEASE
 
-LABEL name="Autoinstrumentation-java" \
+LABEL name="OpenTelemetry Java Automatic Instrumentation" \
     vendor="Sumo Logic" \
     version="${UPSTREAM_VERSION}" \
     release="${RELEASE}" \
-    summary="UBI based OpenTelemetry Java Automatic Instrumentation " \
-    description="Kubernetes Operator for OpenTelemetry Collector" \
+    summary="UBI based OpenTelemetry Java Automatic Instrumentation image" \
+    description="OpenTelemetry Java Automatic Instrumentation provides a Java agent JAR that can be attached to any Java 8+ application and dynamically injects bytecode to capture telemetry from a number of popular libraries and frameworks." \
     maintainer="opensource-collection-team@sumologic.com"
 
 ADD https://raw.githubusercontent.com/open-telemetry/opentelemetry-java-instrumentation/v${UPSTREAM_VERSION}/LICENSE \

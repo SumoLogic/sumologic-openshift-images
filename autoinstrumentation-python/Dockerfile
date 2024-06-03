@@ -9,12 +9,12 @@ FROM registry.access.redhat.com/ubi9/ubi:9.4
 ARG UPSTREAM_VERSION
 ARG RELEASE
 
-LABEL name="Autoinstrumentation-python" \
+LABEL name="OpenTelemetry Python Automatic Instrumentation" \
     vendor="Sumo Logic" \
     version="${UPSTREAM_VERSION}" \
     release="${RELEASE}" \
-    summary="UBI based OpenTelemetry Python Automatic Instrumentation " \
-    description="Kubernetes Operator for OpenTelemetry Collector" \
+    summary="UBI based OpenTelemetry Python Automatic Instrumentation image" \
+    description="Python auto-instrumentation libraries for OpenTelemetry" \
     maintainer="opensource-collection-team@sumologic.com"
 
 ADD https://raw.githubusercontent.com/open-telemetry/opentelemetry-python-contrib/v${UPSTREAM_VERSION}/LICENSE \

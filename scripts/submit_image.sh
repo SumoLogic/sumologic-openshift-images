@@ -2,6 +2,22 @@
 
 set -e
 
+# consts
+## Sumo Logic Helm Operator project id
+## rel: https://connect.redhat.com/manage/products/6075d88c2b962feb86bea730/overview
+readonly OPERATOR_PROJECT_ID=6075d88c2b962feb86bea730
+
+function cleanup() {
+    if [[ -n ${CONTAINER_PROJECT_ID} && -n ${SUMOLOGIC_IMAGE} ]]; then
+        readonly APPLICATION_NAME="$(docker inspect ${SUMOLOGIC_IMAGE} | jq '.[0].Config.Labels.name' --raw-output)"
+        echo "https://connect.redhat.com/component/${OPERATOR_PROJECT_ID}/${CONTAINER_PROJECT_ID}/certification"
+        echo "Project ID: ${CONTAINER_PROJECT_ID}"
+        echo "Name of Application: ${APPLICATION_NAME}"
+    fi
+}
+
+trap cleanup EXIT
+
 if [ -z ${CONTAINER_PROJECT_ID} ] || [ -z ${CONTAINER_REGISTRY_KEY} ] || [ -z ${SUMOLOGIC_IMAGE} ] || [ -z ${PYAXIS_API_TOKEN} ] 
 then
     echo "One of required environment variables is missing"

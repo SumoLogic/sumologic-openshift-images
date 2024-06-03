@@ -3,7 +3,7 @@ UPSTREAM_VERSION ?= ""
 VERSION := "${VERSION_PREFIX}${UPSTREAM_VERSION}"
 IMAGE_NAME ?= ""
 PLATFORM ?= "amd64"
-BIN="../bin/"
+BIN="$(abspath $(CURDIR)/../bin)/"
 
 ifeq ($(UPSTREAM_VERSION),"")
         $(error UPSTREAM_VERSION is required)

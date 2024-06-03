@@ -1,0 +1,32 @@
+{
+  "contacts": [
+    {
+      "email_address": "opensource-collection-team@sumologic.com",
+      "type": "Technical contact"
+    }
+  ],
+  "container": {
+    "application_categories": [
+      "Logging & Metrics",
+      "Monitoring"
+    ],
+    "auto_publish": true,
+    "build_categories": "Standalone image",
+    "distribution_method": "rhcc",
+    "os_content_type": "Red Hat Universal Base Image (UBI)",
+    "release_category": "Generally Available",
+    "repository_description": "${IMAGE_DESCRIPTION}",
+    "repository_name": "${NAME}",
+    "short_description": "${IMAGE_SUMMARY}",
+    "support_platforms": [
+      "OpenShift Container Platform"
+    ],
+    "type": "container"
+  },
+  "name": "${APPLICATION_NAME}",
+  "product_listings": [
+    "6075d88c2b962feb86bea730"
+  ],
+  "project_status": "active",
+  "type": "Containers"
+}

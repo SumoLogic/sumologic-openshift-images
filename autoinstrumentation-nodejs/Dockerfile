@@ -9,12 +9,12 @@ FROM registry.access.redhat.com/ubi9/ubi:9.4
 ARG UPSTREAM_VERSION
 ARG RELEASE
 
-LABEL name="Autoinstrumentation-nodejs" \
+LABEL name="OpenTelemetry Node JS Automatic Instrumentation" \
     vendor="Sumo Logic" \
     version="${UPSTREAM_VERSION}" \
     release="${RELEASE}" \
-    summary="UBI based OpenTelemetry Node JS Automatic Instrumentation " \
-    description="Kubernetes Operator for OpenTelemetry Collector" \
+    summary="UBI based OpenTelemetry Node JS Automatic Instrumentation image" \
+    description="OpenTelemetry Node JS Automatic Instrumentation adds instrumentation to .NET applications without having to modify their source code." \
     maintainer="opensource-collection-team@sumologic.com"
 
 ADD https://raw.githubusercontent.com/open-telemetry/opentelemetry-js-contrib/auto-instrumentations-node-v${UPSTREAM_VERSION}/LICENSE \
