@@ -13,8 +13,8 @@ and all of them need to pass Red Hat Certification, for details please see [Red 
 
 To build and certify UBI based container images please open [actions][actions]:
 
-- run `check` workflow, analyze logs and make steps according to log messages.
-- run `certify` workflow, analyze logs and make steps according to log messages.
+- run [Manually check all container images][check] workflow, analyze logs and make steps according to log messages.
+- run [Manually certify all container images][certify] workflow, analyze logs and make steps according to log messages.
 
 To get list of certified images make following steps:
 
@@ -37,6 +37,8 @@ for details please see [documentation](./scripts/README.md).
 
 [actions]: https://github.com/SumoLogic/sumologic-openshift-images/actions
 [connect_red_hat]: https://connect.redhat.com/
+[check]: https://github.com/SumoLogic/sumologic-openshift-images/actions/workflows/check.yml
+[certify]: https://github.com/SumoLogic/sumologic-openshift-images/actions/workflows/certify.yml
 
 ## Development environment
 
