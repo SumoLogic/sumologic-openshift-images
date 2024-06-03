@@ -26,7 +26,7 @@ PLATFORM            platform to test. Default is 'amd64'"
 ## Perform image check
 function check(){
     echo "Checking image, image: ${IMAGE_NAME}"
-    make -C "${NAME}" check PLATFORM="${PLATFORM}" IMAGE_NAME="${IMAGE_NAME}" UPSTREAM_VERSION="${VERSION}"
+    make check PLATFORM="${PLATFORM}" IMAGE_NAME="${IMAGE_NAME}" UPSTREAM_VERSION="${VERSION}"
 }
 
 ## Perform image submit for certification
@@ -88,6 +88,7 @@ readonly ACTION_PUSH="push"
 readonly ACTION_CHECK="check"
 readonly ACTION_CERTIFY="certify"
 readonly ACTION="${ACTION:-${ACTION_BUILD}}"
+readonly EXTERNAL_IMAGES="(sumologic-otel-collector|kubernetes-setup|kubernetes-tools-kubectl|tailing-sidecar-operator|tailing-sidecar)"
 DEV_SUFFIX=""
 
 if ! [[ "$ACTION" =~ ${ACTION_BUILD}|${ACTION_PUSH}|${ACTION_CHECK}|${ACTION_CERTIFY} ]]; then
@@ -131,7 +132,11 @@ fi
 ## Image do not exists or we forcefully want to build and push it
 
 # Build image
-make -C "${NAME}" build IMAGE_NAME="${IMAGE_NAME}" UPSTREAM_VERSION="${UPSTREAM_VERSION}"
+if echo "${NAME}" | grep -vE "^${EXTERNAL_IMAGES}\$"; then
+    make -C "${NAME}" build IMAGE_NAME="${IMAGE_NAME}" UPSTREAM_VERSION="${UPSTREAM_VERSION}"
+else
+    echo "${NAME} is build in outside repository. Skipping build"
+fi
 
 # Push image
 if ! [[ "${ACTION}" =~ ${ACTION_PUSH}|${ACTION_CHECK}|${ACTION_CERTIFY} ]]; then
@@ -139,7 +144,11 @@ if ! [[ "${ACTION}" =~ ${ACTION_PUSH}|${ACTION_CHECK}|${ACTION_CERTIFY} ]]; then
 fi
 
 echo "Pushing image, image: ${IMAGE_NAME}" 2>&1
-make -C "${NAME}" push IMAGE_NAME="${IMAGE_NAME}" UPSTREAM_VERSION="${UPSTREAM_VERSION}"
+if echo "${NAME}" | grep -vE "^${EXTERNAL_IMAGES}\$"; then
+    make -C "${NAME}" push IMAGE_NAME="${IMAGE_NAME}" UPSTREAM_VERSION="${UPSTREAM_VERSION}"
+else
+    echo "${NAME} is build in outside repository. Skipping push"
+fi
 
 if ! [[ "${ACTION}" =~ ${ACTION_CHECK}|${ACTION_CERTIFY} ]]; then
     exit 0

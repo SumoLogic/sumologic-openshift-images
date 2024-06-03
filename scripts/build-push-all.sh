@@ -9,6 +9,7 @@ readonly ACTION_CHECK="check"
 readonly ACTION_CERTIFY="certify"
 readonly ACTION="${ACTION:-${ACTION_BUILD}}"
 readonly BIN="./bin/"
+readonly EXTERNAL_IMAGES="(sumologic-otel-collector|kubernetes-setup|kubernetes-tools-kubectl|tailing-sidecar-operator|tailing-sidecar)"
 
 if ! [[ "$ACTION" =~ ${ACTION_BUILD}|${ACTION_PUSH}|${ACTION_CHECK}|${ACTION_CERTIFY} ]]; then
     echo "ACTION should be '${ACTION_BUILD}', '${ACTION_PUSH}', '${ACTION_CHECK}' or ${ACTION_CERTIFY}"
@@ -24,7 +25,7 @@ IMAGES=$(./scripts/list-images.py \
     --fetch-base \
     --values scripts/values.yaml \
     --version "${HELM_CHART_VERSION}" \
-    | grep -vE '\/(sumologic-otel-collector|kubernetes-setup|kubernetes-tools-kubectl|tailing-sidecar-operator|tailing-sidecar):')
+    | grep -vE "\/${EXTERNAL_IMAGES}:")
 
 for IMAGE in ${IMAGES}; do
     # Treat everything after `:` as version
