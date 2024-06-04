@@ -20,6 +20,6 @@ jobs:
       - name: Get preflight
         run: make install_preflight
       - name: Check all container images push
-        run: make certify
+        run: make certify-all
         env:
           PYAXIS_API_TOKEN: ${{ secrets.RED_HAT_API_KEY }}
