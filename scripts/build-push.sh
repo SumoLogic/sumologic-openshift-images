@@ -145,7 +145,7 @@ fi
 
 echo "Pushing image, image: ${IMAGE_NAME}" 2>&1
 if echo "${NAME}" | grep -vE "^${EXTERNAL_IMAGES}\$"; then
-    make -C "${NAME}" push IMAGE_NAME="${IMAGE_NAME}" UPSTREAM_VERSION="${UPSTREAM_VERSION}"
+    make push IMAGE_NAME="${IMAGE_NAME}" UPSTREAM_VERSION="${UPSTREAM_VERSION}"
 else
     echo "${NAME} is build in outside repository. Skipping push"
 fi
