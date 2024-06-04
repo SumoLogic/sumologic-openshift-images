@@ -16,10 +16,10 @@ list-images-v3:
 build-all:
 	ACTION=build ./scripts/build-push-all.sh
 
-check:
+check-all:
 	ACTION=check ./scripts/build-push-all.sh
 
-certify:
+certify-all:
 	ACTION=certify ./scripts/build-push-all.sh
 
 verify:
