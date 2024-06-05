@@ -1,3 +1,4 @@
 preflight.log
 artifacts
 bin/
+.vagrant/

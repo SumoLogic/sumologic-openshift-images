@@ -58,6 +58,14 @@ brew install --cask virtualbox
 brew install --cask vagrant
 ```
 
+#### ARM hosts (Apple M1, and so on)
+
+You'll need to use QEMU instead of VirtualBox to use Vagrant on ARM. The following instructions will assume an M1 Mac as the host:
+
+1. Install QEMU: `brew install qemu`
+2. Install the QEMU vagrant provider: `vagrant plugin install vagrant-qemu`
+3. Provision the VM with the provider: `vagrant up --provider=qemu`
+
 ### Setting up
 
 You can set up the Vagrant environment with just one command:
