@@ -22,7 +22,19 @@ curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scrip
 chmod 700 get_helm.sh
 ./get_helm.sh
 
-wget "https://github.com/redhat-openshift-ecosystem/openshift-preflight/releases/latest/download/preflight-linux-amd64"
-mv preflight-linux-amd64 preflight
-chmod +x preflight
-mv preflight /usr/local/bin/preflight
+if [[ "${ARCH}" == "arm64" ]]; then
+   export GO_VERSION="1.21.4"
+   # Install Go
+   curl -LJ "https://golang.org/dl/go${GO_VERSION}.linux-${ARCH}.tar.gz" -o go.linux-${ARCH}.tar.gz \
+      && rm -rf /usr/local/go \
+      && tar -C /usr/local -xzf go.linux-${ARCH}.tar.gz \
+      && rm go.linux-${ARCH}.tar.gz \
+      && ln -s /usr/local/go/bin/go /usr/local/bin
+   cd /sumologic
+   make build_preflight
+else
+   wget "https://github.com/redhat-openshift-ecosystem/openshift-preflight/releases/latest/download/preflight-linux-amd64"
+   mv preflight-linux-amd64 preflight
+   chmod +x preflight
+   mv preflight /usr/local/bin/preflight
+fi
