@@ -22,7 +22,7 @@ curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scrip
 chmod 700 get_helm.sh
 ./get_helm.sh
 
-wget "https://github.com/redhat-openshift-ecosystem/openshift-preflight/releases/latest/download/preflight-linux-amd64"
-mv preflight-linux-amd64 preflight
+wget "https://github.com/redhat-openshift-ecosystem/openshift-preflight/releases/latest/download/preflight-linux-${ARCH}"
+mv preflight-linux-${ARCH} preflight
 chmod +x preflight
 mv preflight /usr/local/bin/preflight

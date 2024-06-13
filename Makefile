@@ -31,6 +31,16 @@ install_preflight:
 	mkdir -p ./bin/
 	mv preflight-linux-amd64 ./bin/preflight
 
+make build_preflight:
+	mkdir -p ./bin
+	git clone git@github.com:redhat-openshift-ecosystem/openshift-preflight.git ./bin/preflight-git || true
+	# We need to build with RELEASE_TAG env
+	cd ./bin/preflight-git && \
+	export RELEASE_TAG=$$(git describe --tags $$(git rev-list --tags --max-count=1)) && \
+	git checkout "$${RELEASE_TAG}" && \
+	make build && \
+	mv preflight ../\
+
 _login:
 	aws ecr-public get-login-password --region us-east-1 \
 	| docker login --username AWS --password-stdin $(ECR_URL)
