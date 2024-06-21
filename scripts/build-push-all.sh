@@ -9,6 +9,8 @@ readonly ACTION_CHECK="check"
 readonly ACTION_CERTIFY="certify"
 readonly ACTION="${ACTION:-${ACTION_BUILD}}"
 readonly BIN="./bin/"
+## exprot BIN so it can be used in sub-scripts
+export BIN
 readonly EXTERNAL_IMAGES="(sumologic-otel-collector|kubernetes-setup|kubernetes-tools-kubectl|tailing-sidecar-operator|tailing-sidecar)"
 
 if ! [[ "$ACTION" =~ ${ACTION_BUILD}|${ACTION_PUSH}|${ACTION_CHECK}|${ACTION_CERTIFY} ]]; then
