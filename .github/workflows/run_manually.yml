@@ -50,6 +50,7 @@ jobs:
         run: make install_preflight
       - name: Build push
         run: |
+          BIN=./bin/ \
           PYAXIS_API_TOKEN="${PYAXIS_API_TOKEN=}" \
           ACTION="${ACTION}" \
           NAME="${NAME}" \

@@ -11,7 +11,6 @@ readonly ACTION="${ACTION:-${ACTION_BUILD}}"
 readonly BIN="./bin/"
 ## exprot BIN so it can be used in sub-scripts
 export BIN
-readonly EXTERNAL_IMAGES="(sumologic-otel-collector|kubernetes-setup|kubernetes-tools-kubectl|tailing-sidecar-operator|tailing-sidecar)"
 
 if ! [[ "$ACTION" =~ ${ACTION_BUILD}|${ACTION_PUSH}|${ACTION_CHECK}|${ACTION_CERTIFY} ]]; then
     echo "ACTION should be '${ACTION_BUILD}', '${ACTION_PUSH}', '${ACTION_CHECK}' or ${ACTION_CERTIFY}"
@@ -26,8 +25,7 @@ fi
 IMAGES=$(./scripts/list-images.py \
     --fetch-base \
     --values scripts/values.yaml \
-    --version "${HELM_CHART_VERSION}" \
-    | grep -vE "\/${EXTERNAL_IMAGES}:")
+    --version "${HELM_CHART_VERSION}")
 
 for IMAGE in ${IMAGES}; do
     # Treat everything after `:` as version
