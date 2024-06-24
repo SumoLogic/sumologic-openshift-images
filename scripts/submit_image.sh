@@ -18,15 +18,27 @@ function cleanup() {
 
 trap cleanup EXIT
 
-if [ -z ${CONTAINER_PROJECT_ID} ] || [ -z ${CONTAINER_REGISTRY_KEY} ] || [ -z ${SUMOLOGIC_IMAGE} ] || [ -z ${PYAXIS_API_TOKEN} ] 
+if [ -z ${CONTAINER_PROJECT_ID} ] || [ -z ${SUMOLOGIC_IMAGE} ] || [ -z ${PYAXIS_API_TOKEN} ]
 then
     echo "One of required environment variables is missing"
-    echo "required environment variables: CONTAINER_PROJECT_ID, CONTAINER_REGISTRY_KEY, SUMOLOGIC_IMAGE, PYAXIS_API_TOKEN"
+    echo "required environment variables: CONTAINER_PROJECT_ID, SUMOLOGIC_IMAGE, PYAXIS_API_TOKEN"
     exit 1
 fi
 
 AUTH_CONTENT="${AUTH_CONTENT}"
 readonly PLATFORM="${PLATFORM:-amd64}"
+
+if [[ -z "${CONTAINER_REGISTRY_KEY}" || "${CONTAINER_REGISTRY_KEY}"=="null" ]]; then
+    echo "Invalid CONTAINER_REGISTRY_KEY. Assuming that the original registry should be used and just submitting results"
+
+    # submit image
+    ${BIN}preflight check container "${SUMOLOGIC_IMAGE}" \
+    --submit \
+    --pyxis-api-token="${PYAXIS_API_TOKEN}" \
+    --certification-project-id="${CONTAINER_PROJECT_ID}" \
+    --platform="${PLATFORM}"
+    exit 0
+fi
 
 echo "${CONTAINER_REGISTRY_KEY}" | docker login -u "redhat-isv-containers+${CONTAINER_PROJECT_ID}-robot" quay.io --password-stdin
 
