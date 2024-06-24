@@ -33,7 +33,7 @@ function check(){
 function submit(){
     echo "Submitting image for certification, image: ${IMAGE_NAME}"
     ## Fetch container project id based on directory(image) name
-    CONTAINER_PROJECT_ID="$(curl -sH "X-API-KEY: ${PYAXIS_API_TOKEN}" "https://catalog.redhat.com/api/containers/v1/product-listings/id/${OPERATOR_PROJECT_ID}/projects/certification" | jq ".data[] | select(.name == \"${NAME}\")._id" --raw-output)"
+    CONTAINER_PROJECT_ID="$(curl -sH "X-API-KEY: ${PYAXIS_API_TOKEN}" "https://catalog.redhat.com/api/containers/v1/product-listings/id/${OPERATOR_PROJECT_ID}/projects/certification" | jq ".data[] | select(.container.repository_name == \"${NAME}\")._id" --raw-output)"
 
     if [[ -z ${CONTAINER_PROJECT_ID} ]]; then
         echo "Missing project for ${IMAGE_NAME}"
