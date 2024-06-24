@@ -28,7 +28,7 @@ fi
 AUTH_CONTENT="${AUTH_CONTENT}"
 readonly PLATFORM="${PLATFORM:-amd64}"
 
-if [[ -z "${CONTAINER_REGISTRY_KEY}" || "${CONTAINER_REGISTRY_KEY}"=="null" ]]; then
+if [[ -z "${CONTAINER_REGISTRY_KEY}" || "${CONTAINER_REGISTRY_KEY}" == "null" ]]; then
     echo "Invalid CONTAINER_REGISTRY_KEY. Assuming that the original registry should be used and just submitting results"
 
     # submit image
