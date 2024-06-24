@@ -2,7 +2,14 @@ name: Manually certify all container images
 
 on:
   workflow_dispatch:
- 
+    inputs:
+      force:
+        type: choice
+        description: Perform action even if image already exists
+        options:
+          - "false"
+          - "true"
+
 defaults:
   run:
     shell: bash
@@ -23,3 +30,4 @@ jobs:
         run: make certify-all
         env:
           PYAXIS_API_TOKEN: ${{ secrets.RED_HAT_API_KEY }}
+          FORCE: "${{ inputs.force }}"
