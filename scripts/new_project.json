@@ -13,6 +13,7 @@
     "auto_publish": true,
     "build_categories": "Standalone image",
     "distribution_method": "rhcc",
+    "hosted_registry": true,
     "os_content_type": "Red Hat Universal Base Image (UBI)",
     "release_category": "Generally Available",
     "repository_description": "${IMAGE_DESCRIPTION}",
