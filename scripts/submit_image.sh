@@ -29,15 +29,16 @@ AUTH_CONTENT="${AUTH_CONTENT}"
 readonly PLATFORM="${PLATFORM:-amd64}"
 
 if [[ -z "${CONTAINER_REGISTRY_KEY}" || "${CONTAINER_REGISTRY_KEY}" == "null" ]]; then
-    echo "Invalid CONTAINER_REGISTRY_KEY. Assuming that the original registry should be used and just submitting results"
+    echo "Invalid CONTAINER_REGISTRY_KEY. Exiting"
+    exit 1
 
-    # submit image
-    ${BIN}preflight check container "${SUMOLOGIC_IMAGE}" \
-    --submit \
-    --pyxis-api-token="${PYAXIS_API_TOKEN}" \
-    --certification-project-id="${CONTAINER_PROJECT_ID}" \
-    --platform="${PLATFORM}"
-    exit 0
+    ## submit scan result for non-red-hat registry
+    # ${BIN}preflight check container "${SUMOLOGIC_IMAGE}" \
+    # --submit \
+    # --pyxis-api-token="${PYAXIS_API_TOKEN}" \
+    # --certification-project-id="${CONTAINER_PROJECT_ID}" \
+    # --platform="${PLATFORM}"
+    # exit 0
 fi
 
 echo "${CONTAINER_REGISTRY_KEY}" | docker login -u "redhat-isv-containers+${CONTAINER_PROJECT_ID}-robot" quay.io --password-stdin
