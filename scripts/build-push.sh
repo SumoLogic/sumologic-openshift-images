@@ -61,9 +61,20 @@ function submit(){
         RESULT="$(curl -sH "X-API-KEY: ${PYAXIS_API_TOKEN}" -H 'Content-Type: application/json' -X PATCH https://catalog.redhat.com/api/containers/v1/product-listings/id/${OPERATOR_PROJECT_ID} --data "${DATA}")"
     fi
 
-    ## Fetch key for image registry
-    CONTAINER_REGISTRY_KEY="$(curl -sH "X-API-KEY: ${PYAXIS_API_TOKEN}" "https://catalog.redhat.com/api/containers/v1/projects/certification/id/${CONTAINER_PROJECT_ID}/secrets" | jq ".registry_credentials.password" --raw-output)"
-    DOCKER_CONFIG_JSON="$(curl -sH "X-API-KEY: ${PYAXIS_API_TOKEN}" "https://catalog.redhat.com/api/containers/v1/projects/certification/id/${CONTAINER_PROJECT_ID}/secrets" | jq ".docker_config_json" --raw-output)"
+    COUNTER=0
+    while [[ -z "${CONTAINER_REGISTRY_KEY}" || "${CONTAINER_REGISTRY_KEY}" == "null" && "${COUNTER}" -lt 10 ]]; do
+        ## Fetch key for image registry
+        CONTAINER_REGISTRY_KEY="$(curl -sH "X-API-KEY: ${PYAXIS_API_TOKEN}" "https://catalog.redhat.com/api/containers/v1/projects/certification/id/${CONTAINER_PROJECT_ID}/secrets" | jq ".registry_credentials.password" --raw-output)"
+        DOCKER_CONFIG_JSON="$(curl -sH "X-API-KEY: ${PYAXIS_API_TOKEN}" "https://catalog.redhat.com/api/containers/v1/projects/certification/id/${CONTAINER_PROJECT_ID}/secrets" | jq ".docker_config_json" --raw-output)"
+
+        if [[ -n "${CONTAINER_REGISTRY_KEY}" && "${CONTAINER_REGISTRY_KEY}" != "null" ]]; then
+            break
+        fi
+
+        echo 'Error during obtaining hosted registry credentials. Retrying in 3 seconds'
+        sleep 3
+        COUNTER=$(( COUNTER + 1 ))
+    done
 
     CONTAINER_PROJECT_ID=${CONTAINER_PROJECT_ID} \
     CONTAINER_REGISTRY_KEY=${CONTAINER_REGISTRY_KEY} \
