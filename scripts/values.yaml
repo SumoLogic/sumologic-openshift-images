@@ -18,6 +18,7 @@ tailing-sidecar-operator:
   enabled: true
 opentelemetry-operator:
   enabled: true
+instrumentation:
   createDefaultInstrumentation: true
   instrumentationNamespaces: "sumologic"
 kube-prometheus-stack:
