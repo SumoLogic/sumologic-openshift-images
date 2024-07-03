@@ -25,7 +25,7 @@ for IMAGE in ${IMAGES}; do
   else
     # Treat everything after `:` as digest
     DIGEST="${DIGEST##*:}"
-    REDHAT_IMAGE_WITH_SHA256=${REDHAT_REGISTRY}${NAME}:@sha256:${DIGEST}
+    REDHAT_IMAGE_WITH_SHA256=${REDHAT_REGISTRY}${NAME}@sha256:${DIGEST}
   fi
 
   echo ${REDHAT_IMAGE}
