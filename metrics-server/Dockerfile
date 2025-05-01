@@ -4,7 +4,7 @@ ARG UPSTREAM_VERSION
 FROM docker.io/bitnami/metrics-server:${UPSTREAM_VERSION} as builder
 
 ## Build RedHat compliant image
-FROM registry.access.redhat.com/ubi9/ubi:9.4
+FROM registry.access.redhat.com/ubi9/ubi:9.5
 ARG UPSTREAM_VERSION
 ARG RELEASE
 
