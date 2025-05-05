@@ -61,7 +61,7 @@ RUN install bin/fluent-bit /fluent-bit/bin/
 RUN cp /tmp/src/conf/*.conf /fluent-bit/etc/
 
 ## Build RedHat compliant image
-FROM registry.access.redhat.com/ubi9/ubi-minimal:9.4
+FROM registry.access.redhat.com/ubi9/ubi-minimal:9.5
 ARG UPSTREAM_VERSION
 ARG RELEASE
 
