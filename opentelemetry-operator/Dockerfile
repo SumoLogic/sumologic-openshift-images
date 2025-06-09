@@ -2,7 +2,7 @@ ARG UPSTREAM_VERSION
 ## Use original image to copy files from
 ## ref: https://github.com/open-telemetry/opentelemetry-operator/blob/v0.63.1/Dockerfile
 
-FROM public.ecr.aws/sumologic/opentelemetry-operator:${UPSTREAM_VERSION} as builder
+FROM public.ecr.aws/sumologic/opentelemetry-operator:${UPSTREAM_VERSION} AS builder
 
 ## Build RedHat compliant image
 FROM registry.access.redhat.com/ubi9/ubi:9.5
