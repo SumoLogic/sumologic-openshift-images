@@ -1,6 +1,6 @@
 ARG UPSTREAM_VERSION
 
-FROM registry.access.redhat.com/ubi9/ubi:9.5 as builder
+FROM registry.access.redhat.com/ubi9/ubi:9.6 as builder
 ARG UPSTREAM_VERSION
 
 ARG BISON_VERSION=3.8.2
@@ -61,7 +61,7 @@ RUN install bin/fluent-bit /fluent-bit/bin/
 RUN cp /tmp/src/conf/*.conf /fluent-bit/etc/
 
 ## Build RedHat compliant image
-FROM registry.access.redhat.com/ubi9/ubi-minimal:9.5
+FROM registry.access.redhat.com/ubi9/ubi-minimal:9.6
 ARG UPSTREAM_VERSION
 ARG RELEASE
 

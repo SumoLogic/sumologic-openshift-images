@@ -5,7 +5,7 @@ ARG UPSTREAM_VERSION
 FROM public.ecr.aws/sumologic/opentelemetry-operator:${UPSTREAM_VERSION} AS builder
 
 ## Build RedHat compliant image
-FROM registry.access.redhat.com/ubi9/ubi:9.5
+FROM registry.access.redhat.com/ubi9/ubi:9.6
 ARG UPSTREAM_VERSION
 ARG RELEASE
 

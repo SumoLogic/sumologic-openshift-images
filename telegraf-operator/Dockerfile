@@ -2,10 +2,10 @@ ARG UPSTREAM_VERSION
 
 ## Use original image to copy files from
 ## ref: https://github.com/influxdata/telegraf-operator/blob/v1.3.10/Dockerfile
-FROM public.ecr.aws/sumologic/telegraf-operator:v${UPSTREAM_VERSION} as builder
+FROM public.ecr.aws/sumologic/telegraf-operator:v${UPSTREAM_VERSION} AS builder
 
 ## Build RedHat compliant image
-FROM registry.access.redhat.com/ubi9/ubi:9.5
+FROM registry.access.redhat.com/ubi9/ubi:9.6
 ARG UPSTREAM_VERSION
 ARG RELEASE
 

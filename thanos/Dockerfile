@@ -2,10 +2,10 @@ ARG UPSTREAM_VERSION
 
 ## Use original image to copy files from
 ## ref: https://github.com/thanos-io/thanos/blob/v0.25.2/Dockerfile
-FROM public.ecr.aws/sumologic/thanos:v${UPSTREAM_VERSION} as builder
+FROM public.ecr.aws/sumologic/thanos:v${UPSTREAM_VERSION} AS builder
 
 ## Build RedHat compliant image
-FROM registry.access.redhat.com/ubi9/ubi:9.5
+FROM registry.access.redhat.com/ubi9/ubi:9.6
 ARG UPSTREAM_VERSION
 ARG RELEASE
 
