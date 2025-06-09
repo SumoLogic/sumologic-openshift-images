@@ -27,8 +27,6 @@ ARG OS="linux"
 COPY --from=builder /bin/prometheus                             /bin/prometheus
 COPY --from=builder /bin/promtool                               /bin/promtool
 COPY --from=builder /etc/prometheus/prometheus.yml              /etc/prometheus/prometheus.yml
-COPY --from=builder /usr/share/prometheus/console_libraries/    /usr/share/prometheus/console_libraries/
-COPY --from=builder /usr/share/prometheus/consoles/             /usr/share/prometheus/consoles/
 COPY --from=builder /LICENSE                                    /licenses/LICENSE
 COPY --from=builder /NOTICE                                     /NOTICE
 COPY --from=builder /npm_licenses.tar.bz2                       /npm_licenses.tar.bz2
@@ -44,6 +42,4 @@ VOLUME     [ "/prometheus" ]
 WORKDIR    /prometheus
 ENTRYPOINT [ "/bin/prometheus" ]
 CMD        [ "--config.file=/etc/prometheus/prometheus.yml", \
-    "--storage.tsdb.path=/prometheus", \
-    "--web.console.libraries=/usr/share/prometheus/console_libraries", \
-    "--web.console.templates=/usr/share/prometheus/consoles" ]
+    "--storage.tsdb.path=/prometheus" ]
