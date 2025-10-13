@@ -6,7 +6,7 @@ FROM public.ecr.aws/sumologic/prometheus:v${UPSTREAM_VERSION} as builder
 ## Build RedHat compliant image
 ARG ARCH="amd64"
 ARG OS="linux"
-FROM registry.access.redhat.com/ubi9/ubi:9.5
+FROM registry.access.redhat.com/ubi9/ubi:9.6
 ARG UPSTREAM_VERSION
 ARG RELEASE
 

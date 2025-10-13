@@ -5,7 +5,7 @@ ARG UPSTREAM_VERSION
 FROM public.ecr.aws/sumologic/autoinstrumentation-java:${UPSTREAM_VERSION} as builder
 
 ## Build RedHat compliant image
-FROM registry.access.redhat.com/ubi9/ubi:9.5
+FROM registry.access.redhat.com/ubi9/ubi:9.6
 ARG UPSTREAM_VERSION
 ARG RELEASE
 
