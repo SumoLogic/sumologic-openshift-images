@@ -16,11 +16,11 @@ We can certify two types of images from this repo,
 2. Components built from a different repo. Ex, sumologic-otel-collector, tailing-sidecar etc.
 
 To build and certify UBI based container images please open [actions][actions]:
-### 1. Build and certify components from this repo:
+### 1. Build and certify components from this repo
  - To build components from this repo, use check, build and push worflows to do the respective operations on sumologic public AWS ECR repo.
 Once new components are built, use certify operation to push to openshift repository.
 
-### 2. Certify components from other repo:
+### 2. Certify components from other repo
 - check, build and push workflows aren't applicable for components from other repositories like sumologic-otel-collector, we just use this repo to certify them.
 - Goto respective components public ECR repository and choose the version to certify.
   Ex. repository: sumologic-otel-collector , version: 0.130.1-sumo-0
