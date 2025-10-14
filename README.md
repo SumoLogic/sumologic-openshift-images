@@ -9,7 +9,28 @@ and all of them need to pass Red Hat Certification, for details please see [Red 
 [helm_operator]: https://github.com/SumoLogic/sumologic-kubernetes-collection-helm-operator
 [red_hat_guide]: https://access.redhat.com/documentation/en-us/red_hat_software_certification/2024/html/red_hat_software_certification_workflow_guide/index
 
-## Container certification
+## Container certification (Preferred method)
+
+We can certify two types of images from this repo,
+1. Components built from this repo.
+2. Components built from a different repo. Ex, sumologic-otel-collector, tailing-sidecar etc.
+
+To build and certify UBI based container images please open [actions][actions]:
+### 1. Build and certify components from this repo
+ - To build components from this repo, use check, build and push worflows to do the respective operations on sumologic public AWS ECR repo.
+Once new components are built, use certify operation to push to openshift repository.
+
+### 2. Certify components from other repo
+- check, build and push workflows aren't applicable for components from other repositories like sumologic-otel-collector, we just use this repo to certify them.
+- Goto respective components public ECR repository and choose the version to certify.
+  Ex. repository: sumologic-otel-collector , version: 0.130.1-sumo-0
+- Enable force push operation when certifying these components.
+
+**Important Note**: While using both the above methods, always make sure to use a new version which is not already present in redhat connect repository for the component which you're trying to update unless you are specifically trying to update an existing component.
+
+
+
+## Container certification (Legacy method, preserving since we have the workflows and need to understand what they do)
 
 To build and certify UBI based container images please open [actions][actions]:
 
