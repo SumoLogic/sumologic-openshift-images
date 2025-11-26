@@ -61,7 +61,7 @@ echo ${AUTH_CONTENT} > temp_auth.json
 ${BIN}preflight check container "quay.io/redhat-isv-containers/${CONTAINER_PROJECT_ID}:${TAG}" \
 --submit \
 --pyxis-api-token="${PYAXIS_API_TOKEN}" \
---certification-project-id="${CONTAINER_PROJECT_ID}" \
+--certification-component-id="${CONTAINER_PROJECT_ID}" \
 --docker-config=temp_auth.json \
 --platform="${PLATFORM}"
 
