@@ -3,6 +3,7 @@
 Description of scripts in this directory:
 
 - [list-images.py](./list-images.py) - script which is used to list all images used in the Sumo Logic Kubernetes Collection Helm Chart
+- [generate_certification_matrix.py](./generate_certification_matrix.py) - script which compares images between two Helm chart versions and generates a certification matrix identifying new and updated images that need Red Hat OpenShift certification
 - [build-push-all.sh](./build-push-all.sh) - script which is used to build and push [UBI](https://catalog.redhat.com/software/base-images) based container images and push them to Red Hat container registry
 - [submit_image.sh](./submit_image.sh) - script which is used to submit image to Red Hat container registry and certify the image.
   environment variables:

@@ -1,0 +1,75 @@
+name: Detect Image Updates
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch:
+    inputs:
+      previous_helm_version:
+        description: 'Previous Helm chart version (e.g., v4.17.1)'
+        required: true
+        type: string
+      target_helm_version:
+        description: 'Target Helm chart version (e.g., v4.18.0)'
+        required: true
+        type: string
+
+jobs:
+  detect-and-analyze:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Setup Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: 'latest'
+
+      - name: Add Helm Repository
+        run: |
+          helm repo add sumologic https://sumologic.github.io/sumologic-kubernetes-collection
+          helm repo update
+      
+      - name: Extract Images from Previous Version
+        run: |
+          python3 scripts/list-images.py \
+            --values scripts/values.yaml \
+            --version ${{ inputs.previous_helm_version }} \
+            --fetch-base \
+            > previous_images.txt
+      
+      - name: Extract Images from Target Version
+        run: |
+          python3 scripts/list-images.py \
+            --values scripts/values.yaml \
+            --version ${{ inputs.target_helm_version }} \
+            --fetch-base \
+            > target_images.txt
+      
+      - name: Generate Certification Matrix
+        run: |
+          python3 scripts/generate_certification_matrix.py \
+            --previous-images previous_images.txt \
+            --target-images target_images.txt \
+            --previous-version ${{ inputs.previous_helm_version }} \
+            --target-version ${{ inputs.target_helm_version }} \
+            --output certification_matrix.json
+      
+      - name: Upload Certification Matrix
+        uses: actions/upload-artifact@v4
+        with:
+          name: certification-matrix
+          path: certification_matrix.json
+          retention-days: 90
+      
+      - name: Output Artifact URL
+        run: |
+          echo "**Download certification_matrix.json:**" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "🔗 [${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Go to the link above and download the artifact from the **Artifacts** section." >> $GITHUB_STEP_SUMMARY
