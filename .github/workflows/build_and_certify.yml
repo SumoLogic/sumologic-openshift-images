@@ -1,0 +1,250 @@
+name: Build And Certify Images
+
+on:
+  workflow_dispatch:
+    inputs:
+      detect_image_updates_run_id:
+        description: 'workflow run ID of(detect_image_updates.yml)'
+        required: true
+        type: string
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  setup:
+    runs-on: ubuntu-22.04
+    outputs:
+      matrix: ${{ steps.parse.outputs.matrix }}
+      image_count: ${{ steps.parse.outputs.image_count }}
+    steps:
+      - name: Download Certification Matrix
+        uses: actions/download-artifact@v4
+        with:
+          name: certification-matrix
+          run-id: ${{ inputs.detect_image_updates_run_id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Parse Matrix
+        id: parse
+        run: |
+          if [ ! -f certification_matrix.json ]; then
+            echo "❌ certification_matrix.json not found"
+            exit 1
+          fi
+          
+          IMAGES=$(jq -c '.images' certification_matrix.json)
+          IMAGE_COUNT=$(jq '.images | length' certification_matrix.json)
+          
+          echo "matrix=${IMAGES}" >> $GITHUB_OUTPUT
+          echo "image_count=${IMAGE_COUNT}" >> $GITHUB_OUTPUT
+
+  process-images:
+    needs: setup
+    runs-on: ubuntu-22.04
+    if: needs.setup.outputs.image_count > 0
+    strategy:
+      matrix:
+        image: ${{ fromJson(needs.setup.outputs.matrix) }}
+      fail-fast: false
+      max-parallel: 3
+    env:
+      IMAGE_NAME: "${{ matrix.image.name }}"
+      VERSION: "${{ matrix.image.tag }}"
+      PYAXIS_API_TOKEN: ${{ secrets.RED_HAT_API_KEY }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: Check UBI Image in ECR
+        id: check
+        run: |
+          UBI_IMAGE="public.ecr.aws/sumologic/${IMAGE_NAME}:${VERSION}-ubi"
+          
+          if docker manifest inspect "${UBI_IMAGE}" >/dev/null 2>&1; then
+            echo "ubi_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "ubi_exists=false" >> $GITHUB_OUTPUT
+            
+            if [ -f "${IMAGE_NAME}/Dockerfile" ]; then
+              echo "has_dockerfile=true" >> $GITHUB_OUTPUT
+            else
+              echo "has_dockerfile=false" >> $GITHUB_OUTPUT
+            fi
+          fi
+      
+      - name: Login to ECR
+        if: steps.check.outputs.ubi_exists == 'true' || steps.check.outputs.has_dockerfile == 'true'
+        run: make login
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Get Preflight
+        if: steps.check.outputs.ubi_exists == 'true' || steps.check.outputs.has_dockerfile == 'true'
+        run: make install_preflight
+      
+      - name: Build UBI Image
+        if: steps.check.outputs.ubi_exists == 'false' && steps.check.outputs.has_dockerfile == 'true'
+        run: |
+          BIN=./bin/ \
+          ACTION="build" \
+          NAME="${IMAGE_NAME}" \
+          VERSION="${VERSION}" \
+          FORCE="false" \
+          ./scripts/build-push.sh
+      
+      - name: Push UBI Image
+        if: steps.check.outputs.ubi_exists == 'false' && steps.check.outputs.has_dockerfile == 'true'
+        run: |
+          BIN=./bin/ \
+          ACTION="push" \
+          NAME="${IMAGE_NAME}" \
+          VERSION="${VERSION}" \
+          FORCE="false" \
+          ./scripts/build-push.sh
+      
+      - name: Certify Image
+        if: steps.check.outputs.ubi_exists == 'true' || steps.check.outputs.has_dockerfile == 'true'
+        run: |
+          BIN=./bin/ \
+          PYAXIS_API_TOKEN="${PYAXIS_API_TOKEN}" \
+          ACTION="certify" \
+          NAME="${IMAGE_NAME}" \
+          VERSION="${VERSION}" \
+          FORCE="true" \
+          ./scripts/build-push.sh
+      
+      - name: Login to Red Hat Registry
+        if: steps.check.outputs.ubi_exists == 'true' || steps.check.outputs.has_dockerfile == 'true'
+        run: |
+          # Login to Red Hat registry to pull certified images
+          echo "${{ secrets.RED_HAT_REGISTRY_TOKEN }}" | docker login registry.connect.redhat.com -u "${{ secrets.RED_HAT_REGISTRY_USERNAME }}" --password-stdin
+      
+      - name: Get SHA256 Digest
+        id: digest
+        if: steps.check.outputs.ubi_exists == 'true' || steps.check.outputs.has_dockerfile == 'true'
+        run: |
+          REDHAT_IMAGE="registry.connect.redhat.com/sumologic/${IMAGE_NAME}:${VERSION}-ubi"
+          
+          echo "⏳ Waiting for image to appear in Red Hat registry..."
+          MAX_ATTEMPTS=5
+          WAIT_TIME=60  # 5 attempts × 60 seconds = 5 minutes max
+          
+          for ATTEMPT in $(seq 1 $MAX_ATTEMPTS); do
+            echo "Attempt $ATTEMPT/$MAX_ATTEMPTS: Checking ${REDHAT_IMAGE}..."
+            
+            if MANIFEST=$(docker manifest inspect "${REDHAT_IMAGE}" 2>/dev/null); then
+              DIGEST=$(echo "${MANIFEST}" | jq -r 'if .manifests then .manifests[0].digest elif .digest then .digest else .config.digest end')
+              
+              if [ -n "${DIGEST}" ] && [ "${DIGEST}" != "null" ]; then
+                echo "✅ Image found! Digest: ${DIGEST}"
+                echo "digest=${DIGEST}" >> $GITHUB_OUTPUT
+                echo "full_reference=registry.connect.redhat.com/sumologic/${IMAGE_NAME}@${DIGEST}" >> $GITHUB_OUTPUT
+                echo "status=success" >> $GITHUB_OUTPUT
+                exit 0
+              fi
+            fi
+            
+            [ $ATTEMPT -lt $MAX_ATTEMPTS ] && sleep $WAIT_TIME
+          done
+          
+          echo "⏳ Image not available after 5 minutes. Status: PENDING"
+          echo "status=pending" >> $GITHUB_OUTPUT
+      
+      - name: Handle Error Case
+        if: steps.check.outputs.ubi_exists == 'false' && steps.check.outputs.has_dockerfile == 'false'
+        run: |
+          echo "❌ Cannot process ${IMAGE_NAME}: No UBI image in ECR and no Dockerfile found"
+          echo "status=error" >> $GITHUB_OUTPUT
+      
+      - name: Save Result
+        if: always()
+        run: |
+          mkdir -p results
+          
+          # Determine status
+          if [ "${{ steps.check.outputs.ubi_exists }}" == "false" ] && [ "${{ steps.check.outputs.has_dockerfile }}" == "false" ]; then
+            STATUS="error"
+            DIGEST=""
+            FULL_REF=""
+            ERROR_MSG="No UBI image in ECR and no Dockerfile found"
+          else
+            STATUS="${{ steps.digest.outputs.status || 'pending' }}"
+            DIGEST="${{ steps.digest.outputs.digest }}"
+            FULL_REF="${{ steps.digest.outputs.full_reference }}"
+            ERROR_MSG=""
+          fi
+          
+          cat > results/${IMAGE_NAME}.json << EOF
+          {
+            "name": "${IMAGE_NAME}",
+            "version": "${VERSION}",
+            "sha256": "${DIGEST}",
+            "full_reference": "${FULL_REF}",
+            "status": "${STATUS}",
+            "error": "${ERROR_MSG}",
+            "certified_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          }
+          EOF
+      
+      - name: Upload Result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: result-${{ matrix.image.name }}
+          path: results/${{ matrix.image.name }}.json
+          retention-days: 90
+
+  summary:
+    needs: [setup, process-images]
+    runs-on: ubuntu-22.04
+    if: always()
+    steps:
+      - name: Download All Results
+        uses: actions/download-artifact@v4
+        with:
+          path: all-results
+          pattern: result-*
+          merge-multiple: true
+      
+      - name: Generate Summary and Consolidated File
+        run: |
+          # Generate certified_images.json
+          jq -s '{
+            "metadata": {
+              "generated_at": (now | strftime("%Y-%m-%dT%H:%M:%SZ")),
+              "workflow_run_id": "${{ github.run_id }}",
+              "detect_image_updates_run_id": "${{ inputs.detect_image_updates_run_id }}"
+            },
+            "images": .
+          }' all-results/*.json > certified_images.json
+          
+          # Count totals
+          TOTAL=$(ls all-results/*.json 2>/dev/null | wc -l | tr -d ' ')
+          ERRORS=$(jq -s '[.[] | select(.status == "error")] | length' all-results/*.json)
+          
+          echo "## 📋 Build & Certification Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Processed ${TOTAL} images**" >> $GITHUB_STEP_SUMMARY
+          
+          # Show errors if any
+          if [ "$ERRORS" -gt 0 ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### ❌ Errors (${ERRORS})" >> $GITHUB_STEP_SUMMARY
+            jq -s -r '.[] | select(.status == "error") | "- \(.name):\(.version) - \(.error)"' all-results/*.json >> $GITHUB_STEP_SUMMARY
+          else
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "✅ All images processed successfully" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "📦 Download [certified_images.json](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY
+      
+      - name: Upload Certified Images
+        uses: actions/upload-artifact@v4
+        with:
+          name: certified-images
+          path: certified_images.json
+          retention-days: 90
