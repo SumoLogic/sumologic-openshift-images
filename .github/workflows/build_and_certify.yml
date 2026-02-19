@@ -107,8 +107,40 @@ jobs:
           FORCE="false" \
           ./scripts/build-push.sh
       
-      - name: Certify Image
+      - name: Check if Already Certified
+        id: check_certified
         if: steps.check.outputs.ubi_exists == 'true' || steps.check.outputs.has_dockerfile == 'true'
+        run: |
+          OPERATOR_PROJECT_ID="6075d88c2b962feb86bea730"
+          TAG="${VERSION}-ubi"
+          
+          # Get container project ID
+          PROJECTS_RESPONSE=$(curl -sH "X-API-KEY: ${PYAXIS_API_TOKEN}" \
+              "https://catalog.redhat.com/api/containers/v1/product-listings/id/${OPERATOR_PROJECT_ID}/projects/certification")
+          
+          CONTAINER_PROJECT_ID=$(echo "${PROJECTS_RESPONSE}" | jq -r ".data[]? | select(.container.repository_name == \"${IMAGE_NAME}\")._id" 2>/dev/null)
+          
+          if [ -z "${CONTAINER_PROJECT_ID}" ] || [ "${CONTAINER_PROJECT_ID}" == "null" ]; then
+            echo "certified=false" >> $GITHUB_OUTPUT
+          else
+            # Check if image is already certified
+            EXISTING_IMAGE=$(curl -sH "X-API-KEY: ${PYAXIS_API_TOKEN}" \
+                "https://catalog.redhat.com/api/containers/v1/projects/certification/id/${CONTAINER_PROJECT_ID}/images" | \
+                jq -r ".data[] | select(.repositories[].tags[]? | select(.name == \"${TAG}\")) | .docker_image_digest" | head -1)
+            
+            if [ -n "${EXISTING_IMAGE}" ] && [ "${EXISTING_IMAGE}" != "null" ]; then
+              echo "certified=true" >> $GITHUB_OUTPUT
+            else
+              echo "certified=false" >> $GITHUB_OUTPUT
+            fi
+          fi
+        env:
+          PYAXIS_API_TOKEN: ${{ secrets.PYAXIS_API_TOKEN }}
+          IMAGE_NAME: ${{ matrix.image }}
+          VERSION: ${{ matrix.version }}
+      
+      - name: Certify Image
+        if: (steps.check.outputs.ubi_exists == 'true' || steps.check.outputs.has_dockerfile == 'true') && steps.check_certified.outputs.certified == 'false'
         run: |
           BIN=./bin/ \
           PYAXIS_API_TOKEN="${PYAXIS_API_TOKEN}" \
