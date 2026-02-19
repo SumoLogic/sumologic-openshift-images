@@ -110,6 +110,10 @@ jobs:
       - name: Check if Already Certified
         id: check_certified
         if: steps.check.outputs.ubi_exists == 'true' || steps.check.outputs.has_dockerfile == 'true'
+        env:
+          PYAXIS_API_TOKEN: ${{ secrets.PYAXIS_API_TOKEN }}
+          IMAGE_NAME: ${{ matrix.image }}
+          VERSION: ${{ matrix.version }}
         run: |
           OPERATOR_PROJECT_ID="6075d88c2b962feb86bea730"
           TAG="${VERSION}-ubi"
@@ -134,10 +138,6 @@ jobs:
               echo "certified=false" >> $GITHUB_OUTPUT
             fi
           fi
-        env:
-          PYAXIS_API_TOKEN: ${{ secrets.PYAXIS_API_TOKEN }}
-          IMAGE_NAME: ${{ matrix.image }}
-          VERSION: ${{ matrix.version }}
       
       - name: Certify Image
         if: (steps.check.outputs.ubi_exists == 'true' || steps.check.outputs.has_dockerfile == 'true') && steps.check_certified.outputs.certified == 'false'
