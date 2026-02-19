@@ -133,29 +133,19 @@ jobs:
           
           if [ -z "${CONTAINER_PROJECT_ID}" ] || [ "${CONTAINER_PROJECT_ID}" == "null" ]; then
             echo "status=error" >> $GITHUB_OUTPUT
-            exit 0
-          fi
-          
-          # Get certified images
-          IMAGES=$(curl -sH "X-API-KEY: ${PYAXIS_API_TOKEN}" \
-              "https://catalog.redhat.com/api/containers/v1/projects/certification/id/${CONTAINER_PROJECT_ID}/images")
-          
-          IMAGE_DATA=$(echo "${IMAGES}" | jq ".data[] | select(.repositories[].tags[] | select(.name == \"${TAG}\"))" | head -1)
-          
-          if [ -z "${IMAGE_DATA}" ] || [ "${IMAGE_DATA}" == "null" ]; then
-            echo "status=pending" >> $GITHUB_OUTPUT
-            exit 0
-          fi
-          
-          # Extract SHA256
-          DOCKER_IMAGE_DIGEST=$(echo "${IMAGE_DATA}" | jq -r '.docker_image_digest // empty' | head -1)
-          
-          if [ -n "${DOCKER_IMAGE_DIGEST}" ] && [ "${DOCKER_IMAGE_DIGEST}" != "null" ]; then
-            echo "digest=${DOCKER_IMAGE_DIGEST}" >> $GITHUB_OUTPUT
-            echo "full_reference=registry.connect.redhat.com/sumologic/${IMAGE_NAME}@${DOCKER_IMAGE_DIGEST}" >> $GITHUB_OUTPUT
-            echo "status=success" >> $GITHUB_OUTPUT
           else
-            echo "status=pending" >> $GITHUB_OUTPUT
+            # Get certified image digest
+            DOCKER_IMAGE_DIGEST=$(curl -sH "X-API-KEY: ${PYAXIS_API_TOKEN}" \
+                "https://catalog.redhat.com/api/containers/v1/projects/certification/id/${CONTAINER_PROJECT_ID}/images" | \
+                jq -r ".data[] | select(.repositories[].tags[]? | select(.name == \"${TAG}\")) | .docker_image_digest" | head -1)
+            
+            if [ -n "${DOCKER_IMAGE_DIGEST}" ] && [ "${DOCKER_IMAGE_DIGEST}" != "null" ]; then
+              echo "digest=${DOCKER_IMAGE_DIGEST}" >> $GITHUB_OUTPUT
+              echo "full_reference=registry.connect.redhat.com/sumologic/${IMAGE_NAME}@${DOCKER_IMAGE_DIGEST}" >> $GITHUB_OUTPUT
+              echo "status=success" >> $GITHUB_OUTPUT
+            else
+              echo "status=pending" >> $GITHUB_OUTPUT
+            fi
           fi
       
       - name: Handle Error Case
