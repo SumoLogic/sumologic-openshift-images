@@ -131,7 +131,7 @@ jobs:
           REDHAT_IMAGE="registry.connect.redhat.com/sumologic/${IMAGE_NAME}:${VERSION}-ubi"
           
           echo "⏳ Waiting for image to appear in Red Hat registry..."
-          MAX_ATTEMPTS=5
+          MAX_ATTEMPTS=10
           WAIT_TIME=60  # 5 attempts × 60 seconds = 5 minutes max
           
           for ATTEMPT in $(seq 1 $MAX_ATTEMPTS); do
