@@ -1,7 +1,8 @@
 ARG UPSTREAM_VERSION
 ## Use original image to copy files from
 ## ref: https://github.com/bitnami/bitnami-docker-metrics-server/blob/${UPSTREAM_VERSION}/0/debian-10/Dockerfile
-FROM docker.io/bitnami/metrics-server:${UPSTREAM_VERSION} as builder
+## Note: Bitnami has moved Debian-based images to bitnamilegacy registry
+FROM docker.io/bitnamilegacy/metrics-server:${UPSTREAM_VERSION} as builder
 
 ## Build RedHat compliant image
 FROM registry.access.redhat.com/ubi9/ubi:9.6

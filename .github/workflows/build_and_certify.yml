@@ -107,8 +107,36 @@ jobs:
           FORCE="false" \
           ./scripts/build-push.sh
       
-      - name: Certify Image
+      - name: Check if Already Certified
+        id: check_certified
         if: steps.check.outputs.ubi_exists == 'true' || steps.check.outputs.has_dockerfile == 'true'
+        run: |
+          OPERATOR_PROJECT_ID="6075d88c2b962feb86bea730"
+          TAG="${VERSION}-ubi"
+          
+          # Get container project ID
+          PROJECTS_RESPONSE=$(curl -sH "X-API-KEY: ${PYAXIS_API_TOKEN}" \
+              "https://catalog.redhat.com/api/containers/v1/product-listings/id/${OPERATOR_PROJECT_ID}/projects/certification")
+          
+          CONTAINER_PROJECT_ID=$(echo "${PROJECTS_RESPONSE}" | jq -r ".data[]? | select(.container.repository_name == \"${IMAGE_NAME}\")._id" 2>/dev/null)
+          
+          if [ -z "${CONTAINER_PROJECT_ID}" ] || [ "${CONTAINER_PROJECT_ID}" == "null" ]; then
+            echo "certified=false" >> $GITHUB_OUTPUT
+          else
+            # Check if image is already certified
+            EXISTING_IMAGE=$(curl -sH "X-API-KEY: ${PYAXIS_API_TOKEN}" \
+                "https://catalog.redhat.com/api/containers/v1/projects/certification/id/${CONTAINER_PROJECT_ID}/images" | \
+                jq -r ".data[] | select(.repositories[].tags[]? | select(.name == \"${TAG}\")) | .docker_image_digest" | head -1)
+            
+            if [ -n "${EXISTING_IMAGE}" ] && [ "${EXISTING_IMAGE}" != "null" ]; then
+              echo "certified=true" >> $GITHUB_OUTPUT
+            else
+              echo "certified=false" >> $GITHUB_OUTPUT
+            fi
+          fi
+      
+      - name: Certify Image
+        if: (steps.check.outputs.ubi_exists == 'true' || steps.check.outputs.has_dockerfile == 'true') && steps.check_certified.outputs.certified == 'false'
         run: |
           BIN=./bin/ \
           PYAXIS_API_TOKEN="${PYAXIS_API_TOKEN}" \
@@ -118,42 +146,35 @@ jobs:
           FORCE="true" \
           ./scripts/build-push.sh
       
-      - name: Login to Red Hat Registry
-        if: steps.check.outputs.ubi_exists == 'true' || steps.check.outputs.has_dockerfile == 'true'
-        run: |
-          # Login to Red Hat registry to pull certified images
-          echo "${{ secrets.RED_HAT_REGISTRY_TOKEN }}" | docker login registry.connect.redhat.com -u "${{ secrets.RED_HAT_REGISTRY_USERNAME }}" --password-stdin
-      
-      - name: Get SHA256 Digest
+      - name: Get SHA256 Digest from Red Hat API
         id: digest
         if: steps.check.outputs.ubi_exists == 'true' || steps.check.outputs.has_dockerfile == 'true'
         run: |
-          REDHAT_IMAGE="registry.connect.redhat.com/sumologic/${IMAGE_NAME}:${VERSION}-ubi"
+          OPERATOR_PROJECT_ID="6075d88c2b962feb86bea730"
+          TAG="${VERSION}-ubi"
           
-          echo "⏳ Waiting for image to appear in Red Hat registry..."
-          MAX_ATTEMPTS=5
-          WAIT_TIME=60  # 5 attempts × 60 seconds = 5 minutes max
+          # Get container project ID
+          PROJECTS_RESPONSE=$(curl -sH "X-API-KEY: ${PYAXIS_API_TOKEN}" \
+              "https://catalog.redhat.com/api/containers/v1/product-listings/id/${OPERATOR_PROJECT_ID}/projects/certification")
           
-          for ATTEMPT in $(seq 1 $MAX_ATTEMPTS); do
-            echo "Attempt $ATTEMPT/$MAX_ATTEMPTS: Checking ${REDHAT_IMAGE}..."
+          CONTAINER_PROJECT_ID=$(echo "${PROJECTS_RESPONSE}" | jq -r ".data[]? | select(.container.repository_name == \"${IMAGE_NAME}\")._id" 2>/dev/null)
+          
+          if [ -z "${CONTAINER_PROJECT_ID}" ] || [ "${CONTAINER_PROJECT_ID}" == "null" ]; then
+            echo "status=error" >> $GITHUB_OUTPUT
+          else
+            # Get certified image digest
+            DOCKER_IMAGE_DIGEST=$(curl -sH "X-API-KEY: ${PYAXIS_API_TOKEN}" \
+                "https://catalog.redhat.com/api/containers/v1/projects/certification/id/${CONTAINER_PROJECT_ID}/images" | \
+                jq -r ".data[] | select(.repositories[].tags[]? | select(.name == \"${TAG}\")) | .docker_image_digest" | head -1)
             
-            if MANIFEST=$(docker manifest inspect "${REDHAT_IMAGE}" 2>/dev/null); then
-              DIGEST=$(echo "${MANIFEST}" | jq -r 'if .manifests then .manifests[0].digest elif .digest then .digest else .config.digest end')
-              
-              if [ -n "${DIGEST}" ] && [ "${DIGEST}" != "null" ]; then
-                echo "✅ Image found! Digest: ${DIGEST}"
-                echo "digest=${DIGEST}" >> $GITHUB_OUTPUT
-                echo "full_reference=registry.connect.redhat.com/sumologic/${IMAGE_NAME}@${DIGEST}" >> $GITHUB_OUTPUT
-                echo "status=success" >> $GITHUB_OUTPUT
-                exit 0
-              fi
+            if [ -n "${DOCKER_IMAGE_DIGEST}" ] && [ "${DOCKER_IMAGE_DIGEST}" != "null" ]; then
+              echo "digest=${DOCKER_IMAGE_DIGEST}" >> $GITHUB_OUTPUT
+              echo "full_reference=registry.connect.redhat.com/sumologic/${IMAGE_NAME}@${DOCKER_IMAGE_DIGEST}" >> $GITHUB_OUTPUT
+              echo "status=success" >> $GITHUB_OUTPUT
+            else
+              echo "status=pending" >> $GITHUB_OUTPUT
             fi
-            
-            [ $ATTEMPT -lt $MAX_ATTEMPTS ] && sleep $WAIT_TIME
-          done
-          
-          echo "⏳ Image not available after 5 minutes. Status: PENDING"
-          echo "status=pending" >> $GITHUB_OUTPUT
+          fi
       
       - name: Handle Error Case
         if: steps.check.outputs.ubi_exists == 'false' && steps.check.outputs.has_dockerfile == 'false'
