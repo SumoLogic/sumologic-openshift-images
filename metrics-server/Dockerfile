@@ -1,15 +1,16 @@
 ARG UPSTREAM_VERSION
-## Use original image to copy files from
-## ref: https://github.com/bitnami/bitnami-docker-metrics-server/blob/${UPSTREAM_VERSION}/0/debian-10/Dockerfile
-## Note: Bitnami has moved Debian-based images to bitnamilegacy registry
-FROM docker.io/bitnamilegacy/metrics-server:${UPSTREAM_VERSION} as builder
+## Use official Kubernetes metrics-server image to copy files from
+## ref: https://github.com/kubernetes-sigs/metrics-server
+FROM registry.k8s.io/metrics-server/metrics-server:v${UPSTREAM_VERSION} as builder
 
 ## Build RedHat compliant image
 FROM registry.access.redhat.com/ubi9/ubi:9.6
 ARG UPSTREAM_VERSION
 ARG RELEASE
 
-COPY --from=builder /opt/bitnami /opt/bitnami
+COPY --from=builder /metrics-server /opt/bitnami/metrics-server/bin/metrics-server
+
+RUN mkdir -p /opt/bitnami/metrics-server/certificates
 
 ENV SUMMARY="UBI based Metrics Server image" \
     DESCRIPTION="Metrics Server is a cluster-wide aggregator of resource usage data. Metrics Server collects metrics from the Summary API, exposed by Kubelet on each node."
