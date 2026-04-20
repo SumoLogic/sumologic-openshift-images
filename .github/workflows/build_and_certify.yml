@@ -60,6 +60,12 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
       
+      - name: Login to ECR
+        run: make login
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      
       - name: Check UBI Image in ECR
         id: check
         run: |
@@ -76,13 +82,6 @@ jobs:
               echo "has_dockerfile=false" >> $GITHUB_OUTPUT
             fi
           fi
-      
-      - name: Login to ECR
-        if: steps.check.outputs.ubi_exists == 'true' || steps.check.outputs.has_dockerfile == 'true'
-        run: make login
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - name: Get Preflight
         if: steps.check.outputs.ubi_exists == 'true' || steps.check.outputs.has_dockerfile == 'true'
         run: make install_preflight
