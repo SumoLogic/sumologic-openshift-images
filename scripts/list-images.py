@@ -26,16 +26,24 @@ def get_sumo_images(version, values, fetch_base):
     
     for match in matches:
         if fetch_base:
-            # Detect Fluent Bit image used by Tailing Sidecar
+            # Detect Fluent Bit image used by Tailing Sidecar (older versions)
             if re.match('.*tailing-sidecar:.*', match):
-                try:
-                    content = urllib.request.urlopen(f"https://raw.githubusercontent.com/SumoLogic/tailing-sidecar/v{match.split(':')[-1]}/sidecar/fluentbit/Dockerfile").read()
-                except urllib.error.HTTPError:
-                    content = urllib.request.urlopen(f"https://raw.githubusercontent.com/SumoLogic/tailing-sidecar/v{match.split(':')[-1]}/sidecar/Dockerfile").read()
-                fluent_bit_matches = re.findall('FROM (fluent/fluent-bit:.*?)\\\\n', str(content))
-                if fluent_bit_matches == None:
-                    sys.exit(-1)
-                matches.extend(fluent_bit_matches)
+                version_tag = match.split(':')[-1]
+                candidate_paths = [
+                    f"sidecar/fluentbit/Dockerfile",
+                    f"sidecar/Dockerfile",
+                ]
+                content = None
+                for path in candidate_paths:
+                    try:
+                        content = urllib.request.urlopen(f"https://raw.githubusercontent.com/SumoLogic/tailing-sidecar/v{version_tag}/{path}").read()
+                        break
+                    except urllib.error.HTTPError:
+                        continue
+                if content is not None:
+                    fluent_bit_matches = re.findall('FROM (fluent/fluent-bit:.*?)\\\\n', str(content))
+                    if fluent_bit_matches:
+                        matches.extend(fluent_bit_matches)
             
 
     # use set to remove duplicates
