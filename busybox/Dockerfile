@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi9/ubi:9.6
+FROM registry.access.redhat.com/ubi9/ubi:9.7
 
 LABEL name="Busybox Base image" \
     vendor="Sumo Logic" \
