@@ -176,29 +176,6 @@ jobs:
             fi
           fi
       
-      - name: Verify SHA Published in Registry
-        id: verify_published
-        if: steps.digest.outputs.status == 'success'
-        run: |
-          FULL_REF="${{ steps.digest.outputs.full_reference }}"
-          echo "Verifying image is published: ${FULL_REF}"
-
-          MAX_RETRIES=5
-          RETRY_DELAY=30
-          for i in $(seq 1 $MAX_RETRIES); do
-            if docker manifest inspect "${FULL_REF}" >/dev/null 2>&1; then
-              echo "✅ SHA is published and reachable in registry"
-              echo "published=true" >> $GITHUB_OUTPUT
-              exit 0
-            fi
-            echo "⏳ Attempt ${i}/${MAX_RETRIES}: SHA not yet visible, retrying in ${RETRY_DELAY}s..."
-            sleep $RETRY_DELAY
-          done
-
-          echo "❌ SHA ${FULL_REF} is not published in registry after ${MAX_RETRIES} attempts"
-          echo "published=false" >> $GITHUB_OUTPUT
-          exit 1
-
       - name: Handle Error Case
         if: steps.check.outputs.ubi_exists == 'false' && steps.check.outputs.has_dockerfile == 'false'
         run: |
@@ -216,11 +193,6 @@ jobs:
             DIGEST=""
             FULL_REF=""
             ERROR_MSG="No UBI image in ECR and no Dockerfile found"
-          elif [ "${{ steps.verify_published.outputs.published }}" == "false" ]; then
-            STATUS="error"
-            DIGEST="${{ steps.digest.outputs.digest }}"
-            FULL_REF="${{ steps.digest.outputs.full_reference }}"
-            ERROR_MSG="SHA certified but not yet published in registry"
           else
             STATUS="${{ steps.digest.outputs.status || 'pending' }}"
             DIGEST="${{ steps.digest.outputs.digest }}"

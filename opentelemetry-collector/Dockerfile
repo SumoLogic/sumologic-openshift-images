@@ -5,7 +5,7 @@ ARG UPSTREAM_VERSION
 FROM otel/opentelemetry-collector-contrib:${UPSTREAM_VERSION} as builder
 
 ## Build RedHat compliant image
-FROM registry.access.redhat.com/ubi9/ubi:9.7
+FROM registry.access.redhat.com/ubi9/ubi:9.8
 ARG UPSTREAM_VERSION
 ARG RELEASE
 
