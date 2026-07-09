@@ -23,6 +23,6 @@ instrumentation:
   instrumentationNamespaces: "sumologic"
 kube-prometheus-stack:
   prometheusOperator:
-    enabled: true
+    enabled: false
   prometheus:
-    enabled: true
+    enabled: false

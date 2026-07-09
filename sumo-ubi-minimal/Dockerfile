@@ -1,4 +1,4 @@
-ARG UPSTREAM_VERSION='9.6-1758184547'
+ARG UPSTREAM_VERSION='9.8'
 
 FROM registry.access.redhat.com/ubi9/ubi-minimal:${UPSTREAM_VERSION}
 
