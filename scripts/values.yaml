@@ -1,7 +1,12 @@
 sumologic:
   accessId: dummy
   accessKey: dummy
+  sourcelessModeAck: true
   metrics:
+    collector:
+      otelcol:
+        singleLayerPipeline:
+          migrationDocAcknowledged: true
     remoteWriteProxy:
       enabled: true
 metrics-server:
