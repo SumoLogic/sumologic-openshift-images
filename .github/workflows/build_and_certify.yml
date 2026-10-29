@@ -60,29 +60,49 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
       
+      # Login first: anonymous pulls from public ECR are rate limited per IP
+      # (TOOMANYREQUESTS), which is easy to hit from shared runners.
+      - name: Login to ECR
+        run: make login
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
       - name: Check UBI Image in ECR
         id: check
         run: |
           UBI_IMAGE="public.ecr.aws/sumologic/${IMAGE_NAME}:${VERSION}-ubi"
-          
-          if docker manifest inspect "${UBI_IMAGE}" >/dev/null 2>&1; then
-            echo "ubi_exists=true" >> $GITHUB_OUTPUT
-          else
-            echo "ubi_exists=false" >> $GITHUB_OUTPUT
-            
+
+          # Only a "manifest not found" answer means the image is missing. Any
+          # other failure (rate limit, auth, network) must not be mistaken for it.
+          UBI_EXISTS=""
+          for attempt in 1 2 3 4 5; do
+            if OUTPUT=$(docker manifest inspect "${UBI_IMAGE}" 2>&1); then
+              UBI_EXISTS="true"
+              break
+            elif echo "${OUTPUT}" | grep -qiE "no such manifest|manifest unknown|not found"; then
+              UBI_EXISTS="false"
+              break
+            fi
+            echo "Attempt ${attempt} to inspect ${UBI_IMAGE} failed: ${OUTPUT}"
+            sleep $(( attempt * 10 ))
+          done
+
+          if [ -z "${UBI_EXISTS}" ]; then
+            echo "❌ Could not determine whether ${UBI_IMAGE} exists"
+            exit 1
+          fi
+
+          echo "ubi_exists=${UBI_EXISTS}" >> $GITHUB_OUTPUT
+
+          if [ "${UBI_EXISTS}" == "false" ]; then
             if [ -f "${IMAGE_NAME}/Dockerfile" ]; then
               echo "has_dockerfile=true" >> $GITHUB_OUTPUT
             else
               echo "has_dockerfile=false" >> $GITHUB_OUTPUT
             fi
           fi
-      
-      - name: Login to ECR
-        if: steps.check.outputs.ubi_exists == 'true' || steps.check.outputs.has_dockerfile == 'true'
-        run: make login
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
       - name: Get Preflight
         if: steps.check.outputs.ubi_exists == 'true' || steps.check.outputs.has_dockerfile == 'true'
         run: make install_preflight
@@ -138,6 +158,10 @@ jobs:
       - name: Certify Image
         if: (steps.check.outputs.ubi_exists == 'true' || steps.check.outputs.has_dockerfile == 'true') && steps.check_certified.outputs.certified == 'false'
         run: |
+          # Let preflight reuse the ECR login so its pull isn't rate limited.
+          # submit_image.sh passes --docker-config explicitly for the quay.io
+          # step, which takes precedence over this variable.
+          PFLT_DOCKERCONFIG="${HOME}/.docker/config.json" \
           BIN=./bin/ \
           PYAXIS_API_TOKEN="${PYAXIS_API_TOKEN}" \
           ACTION="certify" \
